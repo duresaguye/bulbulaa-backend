@@ -12,13 +12,13 @@ class ListAnnualTargets extends ListRecords
 
     public function getSubheading(): ?string
     {
-        return 'Every target has a responsible office, a unit, a year, and a monthly allocation. Pace compares results with what the allocation expected by the end of last month.';
+        return __('Every target has a responsible office, a unit, a year, and a monthly allocation. Pace compares results with what the allocation expected by the end of last month.');
     }
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Assign annual target'),
+            CreateAction::make()->label(__('Assign annual target')),
         ];
     }
 }

@@ -124,12 +124,12 @@ class ReportFormsTest extends TestCase
         Livewire::test(ViewWeeklyProgressReport::class, ['record' => $report->getKey()])
             ->assertActionVisible('approve')
             ->assertActionHidden('submit')
-            ->callAction('return', ['comment' => 'Attach the attendance sheet.']);
+            ->callAction('return', ['comment' => 'Attach the site photos.']);
 
         $this->assertSame(ReportStatus::Returned, $report->fresh()->status);
 
         $this->actingAs($this->officeHead());
-        $this->get('/admin')->assertSee('Attach the attendance sheet.');
+        $this->get('/admin')->assertSee('Attach the site photos.');
     }
 
     public function test_monthly_reports_start_from_weekly_figures_and_require_a_reason_for_shortfalls(): void

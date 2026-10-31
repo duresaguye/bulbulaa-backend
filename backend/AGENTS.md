@@ -4,16 +4,18 @@
 ## Project purpose
 Build a simple town administration platform for a small town in Ethiopia.
 
-The system has three connected parts:
-1. Public town website and content management.
-2. Internal department planning and progress reporting.
-3. HR employee attendance management.
+The system has two connected parts:
+1. Internal department planning and progress reporting (current focus).
+2. Public town website and content management (later).
+
+HR attendance is out of scope. Do not build attendance features unless the
+project owner brings them back into scope.
 
 The goal is to solve real administrative problems with a system that is easy for government staff to use and maintain.
 
 ## Current project status
 - The public website already exists and uses Next.js.
-- The internal administration backend has not been built yet.
+- The planning and reporting backend (Laravel + Filament) is built and tested.
 - Requirements still need to be confirmed with the government contact.
 - Do not assume that every proposed feature is approved.
 
@@ -34,13 +36,8 @@ Do not select framework versions until the installed PHP version and hosting req
 - Authorized staff submit simple weekly progress reports.
 - Monthly results are compared with monthly targets.
 - Submitted internal reports are visible immediately to authorized users.
-- Do not create an approval queue unless explicitly requested.
-
-### HR attendance
-- HR or an authorized person enters attendance from paper records.
-- Attendance records are private.
-- Support agreed statuses such as present, absent, late, and leave.
-- Provide monthly attendance summaries.
+- Supervising offices review submitted reports: approve, or return with a comment
+  (draft → submitted → returned/approved). Keep this workflow simple.
 
 ### Public website and CMS
 - Staff manage public news, announcements, office directories,
@@ -65,7 +62,7 @@ Do not select framework versions until the installed PHP version and hosting req
 ## Security requirements
 - Enforce role-based permissions on the backend.
 - Do not rely only on hiding buttons in the frontend.
-- Restrict attendance and internal reports to authorized users.
+- Restrict internal reports to authorized users.
 - Keep private files outside publicly accessible directories.
 - Validate user input.
 - Keep an audit history for important changes.
@@ -83,5 +80,5 @@ Do not select framework versions until the installed PHP version and hosting req
 Inspect the development environment and help scaffold the Laravel
 backend only after confirming PHP and Composer compatibility.
 
-Do not implement reporting, attendance, CMS, or authentication
-features until the backend foundation is verified.
+Do not start CMS features until planning and reporting are confirmed
+with the government contact.

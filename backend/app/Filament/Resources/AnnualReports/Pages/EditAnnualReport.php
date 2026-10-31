@@ -14,7 +14,7 @@ class EditAnnualReport extends EditRecord
 
     public function getTitle(): string
     {
-        return 'Edit annual report';
+        return __('Edit annual report');
     }
 
     public function getSubheading(): string

@@ -6,6 +6,7 @@ use App\Filament\Resources\AnnualTargets\AnnualTargetResource;
 use App\Filament\Support\OfficeScope;
 use App\Models\AnnualTarget;
 use App\Models\MonthlyPlan;
+use App\Services\EthiopianCalendar;
 use App\Services\ReportingCalendar;
 use App\Services\TargetProgress;
 use Filament\Actions\Action;
@@ -14,6 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class MonthlyPlansTable
 {
@@ -22,25 +24,29 @@ class MonthlyPlansTable
         return $table
             ->columns([
                 TextColumn::make('annualTarget.title')
-                    ->label('Target')
-                    ->description(fn (MonthlyPlan $record): string => $record->annualTarget->department->name)
+                    ->label(__('Target'))
+                    ->description(fn (MonthlyPlan $record): HtmlString => new HtmlString(e($record->annualTarget->department->name)
+                        .'<span class="rt-phone-only">, '.e($record->ethiopianMonthName().' '.$record->annualTarget->fiscal_year).'</span>'))
                     ->searchable()
                     ->wrap(),
-                TextColumn::make('ethiopian_month')->label('Month')
+                TextColumn::make('ethiopian_month')->label(__('Month'))
                     ->formatStateUsing(fn (MonthlyPlan $record): string => $record->ethiopianMonthName().' '.$record->annualTarget->fiscal_year)
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('md'),
                 TextColumn::make('planned_value')
-                    ->label('Monthly target')
+                    ->label(__('Monthly target'))
                     ->formatStateUsing(fn (MonthlyPlan $record): string => $record->annualTarget->formatValue($record->planned_value))
                     ->description(fn (MonthlyPlan $record): string => $record->annualTarget->measurement_unit)
                     ->alignEnd()
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('md'),
                 TextColumn::make('actual')
-                    ->label('Actual')
+                    ->label(__('Actual'))
                     ->state(fn (MonthlyPlan $record): string => $record->annualTarget->formatValue(app(TargetProgress::class)->monthActual($record)))
-                    ->alignEnd(),
+                    ->alignEnd()
+                    ->visibleFrom('md'),
                 TextColumn::make('achievement')
-                    ->label('Achieved')
+                    ->label(__('Achieved'))
                     ->state(function (MonthlyPlan $record): string {
                         $achievement = TargetProgress::achievement(app(TargetProgress::class)->monthActual($record), $record->planned_value);
 
@@ -52,18 +58,18 @@ class MonthlyPlansTable
             ->defaultSort('ethiopian_month')
             ->filters([
                 SelectFilter::make('ethiopian_month')
-                    ->label('Month')
-                    ->options(MonthlyPlan::ETHIOPIAN_MONTHS)
+                    ->label(__('Month'))
+                    ->options(EthiopianCalendar::monthOptions())
                     ->default(fn (): int => app(ReportingCalendar::class)->today['month']),
                 SelectFilter::make('fiscal_year')
-                    ->label('Year (E.C.)')
+                    ->label(__('Year (E.C.)'))
                     ->options(fn (): array => AnnualTarget::query()->distinct()->orderByDesc('fiscal_year')->pluck('fiscal_year', 'fiscal_year')->all())
                     ->query(fn (Builder $query, array $data) => $query->when(
                         $data['value'] ?? null,
                         fn (Builder $query, $year) => $query->whereHas('annualTarget', fn (Builder $target) => $target->where('fiscal_year', $year)),
                     )),
                 SelectFilter::make('office')
-                    ->label('Office')
+                    ->label(__('Office'))
                     ->options(fn (): array => OfficeScope::visibleOfficeOptions())
                     ->query(fn (Builder $query, array $data) => $query->when(
                         $data['value'] ?? null,
@@ -72,12 +78,12 @@ class MonthlyPlansTable
             ])
             ->recordActions([
                 Action::make('openTarget')
-                    ->label('Annual target')
+                    ->label(__('Annual target'))
                     ->color('gray')
                     ->url(fn (MonthlyPlan $record): string => AnnualTargetResource::getUrl('view', ['record' => $record->annual_target_id])),
                 EditAction::make(),
             ])
-            ->emptyStateHeading('No monthly targets for this month')
-            ->emptyStateDescription('Monthly targets come from splitting an annual target across months. Open an annual target and choose "Allocate across months".');
+            ->emptyStateHeading(__('No monthly targets for this month'))
+            ->emptyStateDescription(__('Monthly targets come from splitting an annual target across months. Open an annual target and choose "Allocate across months".'));
     }
 }

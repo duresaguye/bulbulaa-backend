@@ -12,13 +12,13 @@ class ListMonthlyReports extends ListRecords
 
     public function getSubheading(): ?string
     {
-        return 'Each office\'s consolidated results for the month, with explanations for missed targets.';
+        return __('Each office\'s consolidated results for the month, with explanations for missed targets.');
     }
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('New monthly report'),
+            CreateAction::make()->label(__('New monthly report')),
         ];
     }
 }

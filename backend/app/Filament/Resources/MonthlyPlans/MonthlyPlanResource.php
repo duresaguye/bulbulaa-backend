@@ -7,6 +7,7 @@ use App\Filament\Resources\MonthlyPlans\Pages\EditMonthlyPlan;
 use App\Filament\Resources\MonthlyPlans\Pages\ListMonthlyPlans;
 use App\Filament\Resources\MonthlyPlans\Schemas\MonthlyPlanForm;
 use App\Filament\Resources\MonthlyPlans\Tables\MonthlyPlansTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Models\AnnualTarget;
 use App\Models\MonthlyPlan;
 use App\Models\User;
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MonthlyPlanResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = MonthlyPlan::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

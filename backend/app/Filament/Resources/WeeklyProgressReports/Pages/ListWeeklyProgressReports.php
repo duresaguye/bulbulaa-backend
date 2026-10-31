@@ -12,19 +12,19 @@ class ListWeeklyProgressReports extends ListRecords
 
     public function getTitle(): string
     {
-        return 'Weekly reports';
+        return __('Weekly reports');
     }
 
     public function getSubheading(): ?string
     {
-        return 'What each office achieved each week against its monthly targets.';
+        return __('What each office achieved each week against its monthly targets.');
     }
 
     protected function getHeaderActions(): array
     {
         return [
             CreateAction::make()
-                ->label('New weekly report'),
+                ->label(__('New weekly report')),
         ];
     }
 }

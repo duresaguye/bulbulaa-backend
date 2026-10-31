@@ -29,7 +29,7 @@ class MonthlyReport extends Model
                 && $report->isDirty(['department_id', 'ethiopian_fiscal_year', 'ethiopian_month'])
                 && $report->lines()->exists()) {
                 throw ValidationException::withMessages([
-                    'department_id' => 'A report period cannot be changed after results have been added.',
+                    'department_id' => __('A report period cannot be changed after results have been added.'),
                 ]);
             }
         });

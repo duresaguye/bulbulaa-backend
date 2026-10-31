@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Support\Concerns\TranslatesPageLabels;
+use App\Filament\Support\ExportActions;
 use App\Filament\Support\OfficeScope;
 use App\Models\AnnualTarget;
 use App\Models\Department;
@@ -18,6 +20,8 @@ use Livewire\Attributes\Url;
  */
 class OfficePerformance extends Page
 {
+    use TranslatesPageLabels;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Oversight';
@@ -55,9 +59,21 @@ class OfficePerformance extends Page
         $this->year ??= EthiopianCalendar::today()['year'];
     }
 
+    protected function getHeaderActions(): array
+    {
+        $query = fn (): array => array_filter(['year' => $this->year, 'unit' => $this->unit, 'status' => $this->status]);
+
+        return [
+            ExportActions::group(
+                fn (): string => route('filament.admin.exports.office-performance.print', $query()),
+                fn (): string => route('filament.admin.exports.office-performance.excel', $query()),
+            ),
+        ];
+    }
+
     public function getSubheading(): string
     {
-        return 'Pace compares each target\'s reported results with its monthly allocation up to the end of last month.';
+        return __('Pace compares each target\'s reported results with its monthly allocation up to the end of last month.');
     }
 
     /**
@@ -91,10 +107,10 @@ class OfficePerformance extends Page
     public function statusOptions(): array
     {
         return [
-            'all' => 'All offices',
-            'attention' => 'Behind plan or at risk',
-            'overdue' => 'Overdue reports',
-            'review' => 'Reports awaiting review',
+            'all' => __('All offices'),
+            'attention' => __('Behind plan or at risk'),
+            'overdue' => __('Overdue reports'),
+            'review' => __('Reports awaiting review'),
         ];
     }
 

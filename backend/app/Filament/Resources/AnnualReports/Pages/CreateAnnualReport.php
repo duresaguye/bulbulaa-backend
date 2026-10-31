@@ -14,6 +14,6 @@ class CreateAnnualReport extends CreateRecord
 
     public function getTitle(): string
     {
-        return 'New annual report';
+        return __('New annual report');
     }
 }

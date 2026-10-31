@@ -7,6 +7,7 @@ use App\Enums\ReviewAction;
 use App\Filament\Resources\AnnualReports\AnnualReportResource;
 use App\Filament\Resources\MonthlyReports\MonthlyReportResource;
 use App\Filament\Resources\WeeklyProgressReports\WeeklyProgressReportResource;
+use App\Filament\Support\Concerns\TranslatesPageLabels;
 use App\Filament\Support\OfficeScope;
 use App\Models\AnnualReport;
 use App\Models\AnnualTarget;
@@ -31,6 +32,8 @@ use Livewire\Attributes\Url;
  */
 class Dashboard extends BaseDashboard
 {
+    use TranslatesPageLabels;
+
     protected static ?string $title = 'Overview';
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
@@ -57,7 +60,12 @@ class Dashboard extends BaseDashboard
     {
         $today = EthiopianCalendar::today();
 
-        return 'Today is '.EthiopianCalendar::monthName($today['month']).' '.$today['day'].', '.$today['year'].' E.C., week '.$today['week'].' of the month.';
+        return __('Today is :month :day, :year E.C., week :week of the month.', [
+            'month' => EthiopianCalendar::monthName($today['month']),
+            'day' => $today['day'],
+            'year' => $today['year'],
+            'week' => $today['week'],
+        ]);
     }
 
     public function user(): User
@@ -157,26 +165,26 @@ class Dashboard extends BaseDashboard
         $judged = $targets->where('summary.status', '!=', 'not_started')->count();
 
         return [
-            'offices' => ['label' => 'Offices', 'value' => (string) $rows->count(), 'detail' => null],
+            'offices' => ['label' => __('Offices'), 'value' => (string) $rows->count(), 'detail' => null],
             'weekly' => [
-                'label' => 'Weekly reports in',
-                'value' => $received->count().' of '.$required->count(),
-                'detail' => EthiopianCalendar::monthName($week['month']).' week '.$week['week'],
+                'label' => __('Weekly reports in'),
+                'value' => __(':actual of :target', ['actual' => $received->count(), 'target' => $required->count()]),
+                'detail' => __(':month week :week', ['month' => EthiopianCalendar::monthName($week['month']), 'week' => $week['week']]),
             ],
             'review' => [
-                'label' => 'Awaiting review',
+                'label' => __('Awaiting review'),
                 'value' => (string) $rows->sum('awaiting_review'),
                 'detail' => null,
             ],
             'overdue' => [
-                'label' => 'Overdue reports',
+                'label' => __('Overdue reports'),
                 'value' => (string) $rows->sum('overdue'),
-                'detail' => 'This year',
+                'detail' => __('This year'),
             ],
             'targets' => [
-                'label' => 'Targets on track',
-                'value' => $onTrack.' of '.$judged,
-                'detail' => $targets->count() > $judged ? ($targets->count() - $judged).' not yet due' : null,
+                'label' => __('Targets on track'),
+                'value' => __(':actual of :target', ['actual' => $onTrack, 'target' => $judged]),
+                'detail' => $targets->count() > $judged ? __(':count not yet due', ['count' => $targets->count() - $judged]) : null,
             ],
         ];
     }
@@ -269,7 +277,7 @@ class Dashboard extends BaseDashboard
                 $actions[] = $this->reportAction(
                     kind: 'weekly',
                     office: $office,
-                    period: EthiopianCalendar::monthName($week['month']).' '.$week['year'].', week '.$week['week'],
+                    period: __(':month :year, week :week', ['month' => EthiopianCalendar::monthName($week['month']), 'year' => $week['year'], 'week' => $week['week']]),
                     report: $weekly,
                     state: $calendar->weeklyState($weekly, in_array($week['month'], $plannedMonths, true), $week['year'], $week['month'], $week['week']),
                     due: ReportingCalendar::formatDueDate($calendar->weeklyDueDate($week['year'], $week['month'], $week['week'])),
@@ -297,11 +305,11 @@ class Dashboard extends BaseDashboard
 
             foreach ($returned as $report) {
                 $actions[] = [
-                    'title' => 'Returned: '.$report['label'],
+                    'title' => __('Returned: :report', ['report' => $report['label']]),
                     'detail' => $report['comment'],
                     'state' => 'returned',
                     'url' => $report['url'],
-                    'action' => 'Correct report',
+                    'action' => __('Correct report'),
                 ];
             }
 
@@ -310,11 +318,11 @@ class Dashboard extends BaseDashboard
 
                 if ($drafts > 0) {
                     $actions[] = [
-                        'title' => $drafts === 1 ? 'One draft report is not yet submitted' : "{$drafts} draft reports are not yet submitted",
-                        'detail' => 'Drafts prepared by your office stay private until someone with submit permission sends them for review.',
+                        'title' => $drafts === 1 ? __('One draft report is not yet submitted') : __(':count draft reports are not yet submitted', ['count' => $drafts]),
+                        'detail' => __('Drafts prepared by your office stay private until someone with submit permission sends them for review.'),
                         'state' => 'draft',
                         'url' => WeeklyProgressReportResource::getUrl('index'),
-                        'action' => 'Open drafts',
+                        'action' => __('Open drafts'),
                     ];
                 }
             }
@@ -323,11 +331,11 @@ class Dashboard extends BaseDashboard
         if ($user->hasPermission('reports.review') && $this->reviewCount() > 0) {
             $count = $this->reviewCount();
             array_unshift($actions, [
-                'title' => $count === 1 ? 'One report is waiting for your review' : "{$count} reports are waiting for your review",
-                'detail' => 'Approve them or return them to the office with a comment.',
+                'title' => $count === 1 ? __('One report is waiting for your review') : __(':count reports are waiting for your review', ['count' => $count]),
+                'detail' => __('Approve them or return them to the office with a comment.'),
                 'state' => 'submitted',
                 'url' => ReviewQueue::getUrl(),
-                'action' => 'Open review queue',
+                'action' => __('Open review queue'),
             ]);
         }
 
@@ -402,16 +410,16 @@ class Dashboard extends BaseDashboard
         $report = $review->reviewable;
 
         if ($report === null) {
-            return 'Deleted report';
+            return __('Deleted report');
         }
 
-        $type = match (true) {
-            $report instanceof WeeklyProgressReport => 'Weekly report',
-            $report instanceof MonthlyReport => 'Monthly report',
-            default => 'Annual report',
-        };
+        $replace = ['office' => $report->department->name, 'period' => $report->periodLabel()];
 
-        return "{$type}, {$report->department->name}, {$report->periodLabel()}";
+        return match (true) {
+            $report instanceof WeeklyProgressReport => __('Weekly report, :office, :period', $replace),
+            $report instanceof MonthlyReport => __('Monthly report, :office, :period', $replace),
+            default => __('Annual report, :office, :period', $replace),
+        };
     }
 
     /**
@@ -420,39 +428,41 @@ class Dashboard extends BaseDashboard
     private function reportAction(string $kind, Department $office, string $period, WeeklyProgressReport|MonthlyReport|null $report, string $state, string $due, string $createUrl): array
     {
         $resource = $kind === 'weekly' ? WeeklyProgressReportResource::class : MonthlyReportResource::class;
-        $name = $kind === 'weekly' ? 'weekly report' : 'monthly report';
-        $officeSuffix = $this->myOffices()->count() > 1 ? " for {$office->name}" : '';
+        $title = $kind === 'weekly'
+            ? __('Weekly report for :period', ['period' => $period])
+            : __('Monthly report for :period', ['period' => $period]);
+        $title = $this->myOffices()->count() > 1 ? __(':report, :office', ['report' => $title, 'office' => $office->name]) : $title;
         $canWrite = OfficeScope::canWriteFor($office->id);
 
         return match ($state) {
             'due', 'overdue' => [
-                'title' => ucfirst($name)." for {$period}{$officeSuffix}",
-                'detail' => ($state === 'overdue' ? 'Overdue. It was due ' : 'Due ').$due.'.',
+                'title' => $title,
+                'detail' => $state === 'overdue' ? __('Overdue. It was due :date.', ['date' => $due]) : __('Due :date.', ['date' => $due]),
                 'state' => $state,
                 'url' => $canWrite ? $createUrl : null,
-                'action' => $canWrite ? 'Write '.$name : null,
+                'action' => $canWrite ? ($kind === 'weekly' ? __('Write weekly report') : __('Write monthly report')) : null,
             ],
             'draft' => [
-                'title' => ucfirst($name)." for {$period}{$officeSuffix}",
-                'detail' => 'Saved as a draft, not yet submitted. Due '.$due.'.',
+                'title' => $title,
+                'detail' => __('Saved as a draft, not yet submitted. Due :date.', ['date' => $due]),
                 'state' => 'draft',
                 'url' => $resource::getUrl($canWrite ? 'edit' : 'view', ['record' => $report]),
-                'action' => $canWrite ? 'Continue draft' : 'Open',
+                'action' => $canWrite ? __('Continue draft') : __('Open'),
             ],
             'returned' => [
-                'title' => ucfirst($name)." for {$period}{$officeSuffix}",
-                'detail' => 'Returned for correction: '.($report?->latestReturn?->comment ?? ''),
+                'title' => $title,
+                'detail' => __('Returned for correction: :comment', ['comment' => $report?->latestReturn?->comment ?? '']),
                 'state' => 'returned',
                 'url' => $resource::getUrl($canWrite ? 'edit' : 'view', ['record' => $report]),
-                'action' => $canWrite ? 'Correct report' : 'Open',
+                'action' => $canWrite ? __('Correct report') : __('Open'),
             ],
             'not_required' => ['title' => '', 'detail' => '', 'state' => 'not_required', 'url' => null, 'action' => null],
             default => [
-                'title' => ucfirst($name)." for {$period}{$officeSuffix}",
+                'title' => $title,
                 'detail' => ReportStatus::from($state)->getDescription(),
                 'state' => $state,
                 'url' => $resource::getUrl('view', ['record' => $report]),
-                'action' => 'View',
+                'action' => __('View'),
             ],
         };
     }
@@ -479,7 +489,7 @@ class Dashboard extends BaseDashboard
             ->with(['department', 'latestReturn'])
             ->get()
             ->map(fn (WeeklyProgressReport $report) => [
-                'label' => 'weekly report, '.$report->department->name.', '.$report->periodLabel(),
+                'label' => __('Weekly report, :office, :period', ['office' => $report->department->name, 'period' => $report->periodLabel()]),
                 'comment' => (string) $report->latestReturn?->comment,
                 'url' => WeeklyProgressReportResource::getUrl('edit', ['record' => $report]),
             ]);
@@ -493,7 +503,7 @@ class Dashboard extends BaseDashboard
             ->with(['department', 'latestReturn'])
             ->get()
             ->map(fn (MonthlyReport $report) => [
-                'label' => 'monthly report, '.$report->department->name.', '.$report->periodLabel(),
+                'label' => __('Monthly report, :office, :period', ['office' => $report->department->name, 'period' => $report->periodLabel()]),
                 'comment' => (string) $report->latestReturn?->comment,
                 'url' => MonthlyReportResource::getUrl('edit', ['record' => $report]),
             ]);

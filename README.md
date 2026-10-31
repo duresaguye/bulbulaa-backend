@@ -4,8 +4,7 @@ A town administration platform built by Reven Labs.
 
 ## Modules
 - Department planning and reporting
-- HR attendance
-- Public website CMS
+- Public website CMS (later)
 
 ## Development
 See `AGENTS.md` for project rules and current scope.

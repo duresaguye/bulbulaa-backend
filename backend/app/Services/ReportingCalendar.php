@@ -75,7 +75,7 @@ class ReportingCalendar
     {
         $ethiopian = EthiopianCalendar::fromGregorian($date);
 
-        return EthiopianCalendar::monthName($ethiopian['month']).' '.$ethiopian['day'].' ('.$date->format('j M Y').')';
+        return EthiopianCalendar::monthName($ethiopian['month']).' '.$ethiopian['day'].' ('.$date->format('d/m/Y').')';
     }
 
     /**
@@ -186,9 +186,9 @@ class ReportingCalendar
     public static function stateLabel(string $state): string
     {
         return match ($state) {
-            'overdue' => 'Overdue',
-            'due' => 'Not started',
-            'not_required' => 'No targets',
+            'overdue' => __('Overdue'),
+            'due' => __('Not started'),
+            'not_required' => __('No targets'),
             default => ReportStatus::from($state)->getLabel(),
         };
     }

@@ -12,13 +12,13 @@ class ListAnnualReports extends ListRecords
 
     public function getSubheading(): ?string
     {
-        return 'Year-end results per office, calculated from approved monthly reports.';
+        return __('Year-end results per office, calculated from approved monthly reports.');
     }
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('New annual report'),
+            CreateAction::make()->label(__('New annual report')),
         ];
     }
 }

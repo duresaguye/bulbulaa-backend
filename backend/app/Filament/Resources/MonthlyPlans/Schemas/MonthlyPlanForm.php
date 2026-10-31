@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\MonthlyPlans\Schemas;
 
 use App\Models\AnnualTarget;
-use App\Models\MonthlyPlan;
 use App\Models\User;
+use App\Services\EthiopianCalendar;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -16,7 +16,7 @@ class MonthlyPlanForm
     {
         return $schema->components([
             Select::make('annual_target_id')
-                ->label('Annual target')
+                ->label(__('Annual target'))
                 ->options(function (): array {
                     $query = AnnualTarget::query()->with('department')->where('is_active', true);
                     $user = auth()->user();
@@ -32,8 +32,8 @@ class MonthlyPlanForm
                 ->searchable()
                 ->required(),
             Select::make('ethiopian_month')
-                ->label('Ethiopian month')
-                ->options(MonthlyPlan::ETHIOPIAN_MONTHS)
+                ->label(__('Ethiopian month'))
+                ->options(EthiopianCalendar::monthOptions())
                 ->required(),
             TextInput::make('planned_value')
                 ->numeric()

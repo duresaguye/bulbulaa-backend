@@ -3,8 +3,10 @@
 namespace App\Filament\Support\Concerns;
 
 use App\Enums\ReportStatus;
+use App\Filament\Support\ExportActions;
 use App\Filament\Support\ReportActions;
 use App\Services\ReportWorkflow;
+use App\Support\ReportDocument;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Storage;
@@ -38,17 +40,21 @@ trait ViewsOfficeReport
 
     public function getSubheading(): string
     {
-        return ucfirst(static::getResource()::getModelLabel()).' for '.$this->getRecord()->periodLabel();
+        return __(':report for :period', ['report' => ucfirst(static::getResource()::getModelLabel()), 'period' => $this->getRecord()->periodLabel()]);
     }
 
     protected function getHeaderActions(): array
     {
+        $type = ReportDocument::typeForPage(static::class);
+        $route = fn (string $format): string => route('filament.admin.exports.report.'.$format, ['type' => $type, 'record' => $this->getRecord()]);
+
         return [
+            ExportActions::group(fn (): string => $route('print'), fn (): string => $route('excel')),
             ReportActions::approve(),
             ReportActions::return(),
             ReportActions::submit(),
             EditAction::make()
-                ->label(fn (): string => $this->getRecord()->status === ReportStatus::Returned ? 'Correct report' : 'Edit draft')
+                ->label(fn (): string => $this->getRecord()->status === ReportStatus::Returned ? __('Correct report') : __('Edit draft'))
                 ->visible(fn (): bool => static::getResource()::canEdit($this->getRecord())),
         ];
     }
@@ -58,10 +64,10 @@ trait ViewsOfficeReport
         $record = $this->getRecord();
 
         return match ($record->status) {
-            ReportStatus::Draft => 'Not yet submitted. Submit it when the figures are complete.',
+            ReportStatus::Draft => __('Not yet submitted. Submit it when the figures are complete.'),
             ReportStatus::Submitted => ReportWorkflow::reviewerDescription($record->department),
-            ReportStatus::Returned => 'Correct the report and submit it again.',
-            ReportStatus::Approved => 'Approved. This report is part of the official record.',
+            ReportStatus::Returned => __('Correct the report and submit it again.'),
+            ReportStatus::Approved => __('Approved. This report is part of the official record.'),
         };
     }
 

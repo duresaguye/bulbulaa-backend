@@ -8,6 +8,7 @@ use App\Filament\Resources\MonthlyReports\Pages\ListMonthlyReports;
 use App\Filament\Resources\MonthlyReports\Pages\ViewMonthlyReport;
 use App\Filament\Resources\MonthlyReports\Schemas\MonthlyReportForm;
 use App\Filament\Resources\MonthlyReports\Tables\MonthlyReportsTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Filament\Support\OfficeScope;
 use App\Models\MonthlyReport;
 use BackedEnum;
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class MonthlyReportResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = MonthlyReport::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

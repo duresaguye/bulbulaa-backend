@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\AuditLogs\Tables;
 
+use App\Filament\Support\ReportTableParts;
+use App\Services\EthiopianCalendar;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class AuditLogsTable
@@ -14,13 +17,15 @@ class AuditLogsTable
         return $table
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('When')
-                    ->dateTime('j M Y, H:i')
+                    ->label(__('When'))
+                    ->formatStateUsing(fn ($state): string => EthiopianCalendar::display($state, withTime: true))
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->user?->name ?? __('System')))
                     ->sortable(),
                 TextColumn::make('user.name')
-                    ->label('By')
-                    ->placeholder('System')
-                    ->searchable(),
+                    ->label(__('By'))
+                    ->placeholder(__('System'))
+                    ->searchable()
+                    ->visibleFrom('md'),
                 TextColumn::make('event')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -30,28 +35,29 @@ class AuditLogsTable
                     })
                     ->searchable(),
                 TextColumn::make('auditable_type')
-                    ->label('Record')
+                    ->label(__('Record'))
                     ->formatStateUsing(fn (?string $state, $record): string => Str::headline(class_basename((string) $state)).' #'.$record->auditable_id)
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('sm'),
                 TextColumn::make('new_values')
-                    ->label('New values')
+                    ->label(__('New values'))
                     ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state) : (string) $state)
                     ->limit(80)
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('old_values')
-                    ->label('Previous values')
+                    ->label(__('Previous values'))
                     ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state) : (string) $state)
                     ->limit(80)
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('ip_address')
-                    ->label('IP address')
+                    ->label(__('IP address'))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('event')->options([
-                    'created' => 'Created',
-                    'updated' => 'Updated',
-                    'deleted' => 'Deleted',
+                    'created' => __('Created'),
+                    'updated' => __('Updated'),
+                    'deleted' => __('Deleted'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

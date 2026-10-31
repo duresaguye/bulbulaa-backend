@@ -184,10 +184,10 @@ class TargetProgress
     public static function paceLabel(string $status): string
     {
         return match ($status) {
-            'on_track' => 'On track',
-            'at_risk' => 'At risk',
-            'behind' => 'Behind plan',
-            default => 'Not started',
+            'on_track' => __('On track'),
+            'at_risk' => __('At risk'),
+            'behind' => __('Behind plan'),
+            default => __('Not started'),
         };
     }
 

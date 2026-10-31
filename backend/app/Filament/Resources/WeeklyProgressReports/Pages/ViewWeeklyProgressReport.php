@@ -19,9 +19,9 @@ class ViewWeeklyProgressReport extends ViewRecord
         $entries = $this->getRecord()->entries()->with('monthlyPlan.annualTarget')->get();
 
         return [
-            'heading' => 'Results against monthly targets',
-            'target_label' => 'Monthly target',
-            'actual_label' => 'Achieved this week',
+            'heading' => __('Results against monthly targets'),
+            'target_label' => __('Monthly target'),
+            'actual_label' => __('Achieved this week'),
             'rows' => $entries->map(function (WeeklyProgressEntry $entry): array {
                 $target = $entry->monthlyPlan->annualTarget;
 
@@ -44,9 +44,9 @@ class ViewWeeklyProgressReport extends ViewRecord
         $record = $this->getRecord();
 
         return [
-            ['label' => 'Activities completed', 'value' => $record->achievements],
-            ['label' => 'Challenges or delays', 'value' => $record->challenges],
-            ['label' => 'Priorities for next week', 'value' => $record->next_steps],
+            ['label' => __('Activities completed'), 'value' => $record->achievements],
+            ['label' => __('Challenges or delays'), 'value' => $record->challenges],
+            ['label' => __('Priorities for next week'), 'value' => $record->next_steps],
         ];
     }
 }

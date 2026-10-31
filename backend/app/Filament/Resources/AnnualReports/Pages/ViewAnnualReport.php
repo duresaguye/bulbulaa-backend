@@ -25,10 +25,10 @@ class ViewAnnualReport extends ViewRecord
 
         return [
             'heading' => $record->results_snapshot === null
-                ? 'Results for the year (from approved monthly reports, recalculated until submission)'
-                : 'Results for the year (as recorded at submission)',
-            'target_label' => 'Target',
-            'actual_label' => 'Approved result',
+                ? __('Results for the year (from approved monthly reports, recalculated until submission)')
+                : __('Results for the year (as recorded at submission)'),
+            'target_label' => __('Target'),
+            'actual_label' => __('Approved result'),
             'rows' => collect($results)->map(fn (array $row): array => [
                 'title' => $row['title'],
                 'unit' => $row['unit'],
@@ -36,7 +36,7 @@ class ViewAnnualReport extends ViewRecord
                 'actual' => $format($row['actual']),
                 'achievement' => $row['achievement'],
                 'note' => $row['current_target'] != $row['original_target']
-                    ? 'Originally assigned: '.$format($row['original_target'])
+                    ? __('Originally assigned: :value', ['value' => $format($row['original_target'])])
                     : null,
             ])->all(),
         ];
@@ -47,10 +47,10 @@ class ViewAnnualReport extends ViewRecord
         $record = $this->getRecord();
 
         return [
-            ['label' => 'Key accomplishments', 'value' => $record->key_accomplishments],
-            ['label' => 'Missed targets and explanations', 'value' => $record->missed_targets],
-            ['label' => 'Corrective actions', 'value' => $record->corrective_actions],
-            ['label' => 'Lessons learned', 'value' => $record->lessons_learned],
+            ['label' => __('Key accomplishments'), 'value' => $record->key_accomplishments],
+            ['label' => __('Missed targets and explanations'), 'value' => $record->missed_targets],
+            ['label' => __('Corrective actions'), 'value' => $record->corrective_actions],
+            ['label' => __('Lessons learned'), 'value' => $record->lessons_learned],
         ];
     }
 }

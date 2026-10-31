@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\WeeklyProgressReports\Tables;
 
 use App\Filament\Support\ReportTableParts;
-use App\Models\MonthlyPlan;
+use App\Services\EthiopianCalendar;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class WeeklyProgressReportsTable
 {
@@ -16,14 +17,20 @@ class WeeklyProgressReportsTable
     {
         return $table
             ->columns([
-                TextColumn::make('department.name')->label('Office')->searchable()->sortable(),
+                TextColumn::make('department.name')
+                    ->label(__('Office'))
+                    ->wrap()
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->periodLabel()))
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('period')
-                    ->label('Period')
+                    ->label(__('Period'))
                     ->state(fn ($record): string => $record->periodLabel())
+                    ->visibleFrom('md')
                     ->sortable(['ethiopian_fiscal_year', 'ethiopian_month', 'week_number']),
                 ReportTableParts::statusColumn(),
-                TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable(),
-                TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable(),
+                TextColumn::make('preparedBy.name')->label(__('Prepared by'))->toggleable()->visibleFrom('lg'),
+                TextColumn::make('submitted_at')->label(__('Submitted'))->since()->dateTimeTooltip()->placeholder(__('Not submitted'))->sortable()->visibleFrom('md'),
             ])
             ->defaultSort(fn ($query) => $query
                 ->orderByDesc('ethiopian_fiscal_year')
@@ -33,10 +40,10 @@ class WeeklyProgressReportsTable
                 ReportTableParts::statusFilter(),
                 ReportTableParts::officeFilter(),
                 ReportTableParts::yearFilter('weekly_progress_reports'),
-                SelectFilter::make('ethiopian_month')->label('Month')->options(MonthlyPlan::ETHIOPIAN_MONTHS),
+                SelectFilter::make('ethiopian_month')->label(__('Month'))->options(EthiopianCalendar::monthOptions()),
             ])
             ->recordActions([ViewAction::make(), EditAction::make()])
-            ->emptyStateHeading('No weekly reports yet')
-            ->emptyStateDescription('Weekly reports record what each office achieved against its monthly targets.');
+            ->emptyStateHeading(__('No weekly reports yet'))
+            ->emptyStateDescription(__('Weekly reports record what each office achieved against its monthly targets.'));
     }
 }

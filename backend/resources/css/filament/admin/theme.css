@@ -6,41 +6,48 @@
 @source '../../../../resources/views/components/rt/**/*.blade.php';
 
 /*
- * Reven Town design tokens.
- * Paper and ink neutrals, one petrol accent, status colours reserved for statuses.
+ * Design tokens.
+ * Cool green-grey paper and ink, Bulbulaa forest green (shared with the public website) as the one action colour,
+ * gold reserved for the Ethiopian calendar date, and status colours reserved for statuses.
  * IBM Plex Sans (loaded by the panel) with Noto Sans Ethiopic for Amharic and Afaan Oromo text.
  */
 :root {
-    --rt-paper: #f5f6f4;
+    --rt-paper: #f3f5f2;
     --rt-surface: #ffffff;
-    --rt-ink: #1a222c;
-    --rt-muted: #5a6472;
-    --rt-rule: #dadfe2;
-    --rt-rule-strong: #c4cbd0;
-    --rt-accent: #0e5a6b;
-    --rt-accent-soft: #e3eef0;
+    --rt-ink: #17211b;
+    --rt-muted: #56635a;
+    --rt-rule: #dce2dc;
+    --rt-rule-strong: #c3ccc4;
+    --rt-accent: #2c6340;
+    --rt-accent-soft: #e4efe7;
+    --rt-gold: #c5953b;
+    --rt-gold-soft: #f8efdc;
+    --rt-gold-ink: #6b4b12;
     --rt-success: #2f7d4f;
     --rt-warning: #a86a12;
     --rt-danger: #b3362c;
     --rt-info: #3b5f8a;
-    --rt-track: #e7eaec;
+    --rt-track: #e3e8e3;
     --rt-radius: 6px;
 }
 
 .dark {
-    --rt-paper: #12171c;
-    --rt-surface: #1a2027;
-    --rt-ink: #e6eaee;
-    --rt-muted: #9aa4b0;
-    --rt-rule: #2c343d;
-    --rt-rule-strong: #3b4550;
-    --rt-accent: #5fb3c4;
-    --rt-accent-soft: #173a42;
+    --rt-paper: #111613;
+    --rt-surface: #18201b;
+    --rt-ink: #e5ebe6;
+    --rt-muted: #9aa69d;
+    --rt-rule: #2a332d;
+    --rt-rule-strong: #3a453d;
+    --rt-accent: #7fbf92;
+    --rt-accent-soft: #1d3326;
+    --rt-gold: #d9ad5c;
+    --rt-gold-soft: #33290f;
+    --rt-gold-ink: #f0d39a;
     --rt-success: #6cc08f;
     --rt-warning: #e0a948;
     --rt-danger: #ec7a6f;
     --rt-info: #8fb0d6;
-    --rt-track: #2a323a;
+    --rt-track: #29322c;
 }
 
 @layer base {
@@ -143,8 +150,8 @@
     }
 
     .rt-brand__mark {
-        width: 2rem;
-        height: 2rem;
+        width: 2.125rem;
+        height: 2.125rem;
         flex: none;
     }
 
@@ -164,35 +171,77 @@
         font-size: 0.75rem;
     }
 
+    /* Today in the Ethiopian calendar: the one gold element, because every deadline here is counted in it. */
     .rt-period {
         display: flex;
-        align-items: baseline;
-        gap: 0.75rem;
+        align-items: center;
+        gap: 0.875rem;
         margin-inline-end: 0.75rem;
-        font-size: 0.8125rem;
         white-space: nowrap;
     }
 
     .rt-period__date {
-        color: var(--rt-ink);
-        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid color-mix(in srgb, var(--rt-gold) 45%, transparent);
+        border-radius: 999px;
+        background: var(--rt-gold-soft);
+        padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem;
+        color: var(--rt-gold-ink);
+        font-size: 0.8125rem;
+        line-height: 1.1;
+    }
+
+    .rt-period__day {
+        display: grid;
+        place-items: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        background: var(--rt-gold);
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.8125rem;
+    }
+
+    .dark .rt-period__day {
+        color: #1b1405;
+    }
+
+    .rt-period__month {
+        font-weight: 600;
+    }
+
+    .rt-period__week {
+        margin-inline-start: 0.375rem;
+        font-weight: 400;
+        opacity: 0.85;
     }
 
     .rt-period__office {
-        border-inline-start: 1px solid var(--rt-rule-strong);
-        padding-inline-start: 0.75rem;
         color: var(--rt-muted);
+        font-size: 0.8125rem;
     }
 
     @media (max-width: 48rem) {
-        .rt-period__office {
+        .rt-period__office,
+        .rt-period__week {
             display: none;
         }
     }
 
     @media (max-width: 30rem) {
         .rt-period {
+            margin-inline-end: 0.25rem;
+        }
+
+        .rt-period__month {
             display: none;
+        }
+
+        .rt-period__date {
+            padding-inline-end: 0.1875rem;
         }
     }
 
@@ -206,6 +255,27 @@
         border: 1px solid var(--rt-rule);
         border-radius: var(--rt-radius);
         box-shadow: none;
+    }
+
+    .rt-language-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.25rem 1rem;
+        border-top: 1px solid var(--rt-rule);
+        padding-top: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .rt-language-links a {
+        color: var(--rt-accent);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .rt-language-links [aria-current] {
+        color: var(--rt-ink);
+        font-weight: 600;
     }
 
     .rt-login-note {
@@ -477,13 +547,9 @@
         padding-inline-start: calc(0.5rem + var(--depth, 0) * 1.25rem) !important;
     }
 
-    .rt-row-actions {
+    td.rt-row-actions {
         text-align: end !important;
         white-space: nowrap;
-    }
-
-    .rt-row-actions > * + * {
-        margin-inline-start: 0.75rem;
     }
 
     .rt-cell-bar {
@@ -699,6 +765,305 @@
     .rt-target-list {
         display: grid;
         gap: 1rem;
+    }
+
+
+    /* Row actions -------------------------------------------------------- */
+
+    td.rt-row-actions > * {
+        vertical-align: middle;
+    }
+
+    td.rt-row-actions > * + * {
+        margin-inline-start: 0.5rem;
+    }
+
+    .rt-disclosure {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        border-radius: var(--rt-radius);
+        padding: 0.25rem 0.375rem;
+        color: var(--rt-accent);
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .rt-disclosure:hover {
+        background: var(--rt-accent-soft);
+    }
+
+    .rt-disclosure__icon {
+        width: 1rem;
+        height: 1rem;
+        transition: transform 150ms ease;
+    }
+
+    .rt-disclosure[aria-expanded='true'] .rt-disclosure__icon {
+        transform: rotate(180deg);
+    }
+
+    .rt-detail-footer {
+        margin-top: 0.5rem;
+    }
+
+    /* Recent activity ------------------------------------------------------ */
+
+    .rt-timeline--compact {
+        gap: 0;
+    }
+
+    .rt-timeline--compact li.rt-activity {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 0.75rem;
+        padding-block: 0.625rem;
+    }
+
+    .rt-timeline--compact li.rt-activity:first-child {
+        padding-top: 0;
+    }
+
+    .rt-activity__dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        margin-top: 0.45rem;
+        border-radius: 999px;
+        background: var(--rt-muted);
+    }
+
+    .rt-activity__dot--success { background: var(--rt-success); }
+    .rt-activity__dot--danger { background: var(--rt-danger); }
+    .rt-activity__dot--info { background: var(--rt-info); }
+
+    /* Messages from the public ---------------------------------------- */
+
+    @media (min-width: 80rem) {
+        .fi-ta-cell-details {
+            min-width: 20rem;
+        }
+    }
+
+    .rt-preserve-lines {
+        white-space: pre-line;
+    }
+
+    .rt-photo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+        gap: 0.75rem;
+    }
+
+    .rt-photo {
+        display: block;
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+        border: 1px solid var(--rt-rule);
+        border-radius: var(--rt-radius);
+        background: var(--rt-paper);
+    }
+
+    .rt-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rt-photo:focus-visible {
+        outline-offset: 3px;
+    }
+
+    /* Month target context inside report forms ---------------------------- */
+
+    .rt-plan {
+        display: grid;
+        gap: 0.625rem;
+    }
+
+    .rt-plan__figures {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 2rem;
+    }
+
+    .rt-plan__figures dt {
+        color: var(--rt-muted);
+        font-size: 0.8125rem;
+    }
+
+    .rt-plan__figures dd {
+        font-size: 1.0625rem;
+        font-weight: 600;
+    }
+
+    .rt-plan__bar {
+        height: 0.375rem;
+        max-width: 28rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--rt-track);
+    }
+
+    .rt-plan__bar > span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--rt-accent);
+    }
+
+    .rt-plan__activities {
+        max-width: 70ch;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+    }
+
+    /* Shown only on phones, where the column it repeats is hidden. Matches Filament's md breakpoint. */
+    @media (min-width: 48rem) {
+        .rt-phone-only,
+        .fi-ta-text-description:has(> .rt-phone-only:only-child) {
+            display: none;
+        }
+    }
+
+    /* Very small phones: tighter list cells so the status column stays on screen. */
+    @media (max-width: 25rem) {
+        .fi-ta-row .fi-ta-text,
+        .fi-ta-header-cell {
+            padding-inline: 0.5rem;
+        }
+
+        .fi-ta-row .fi-badge {
+            white-space: normal;
+            text-align: start;
+        }
+    }
+
+    /* Phones: tables become one card per row, each value labelled ------------ */
+
+    @media (max-width: 40rem) {
+        .rt-table-wrap:has(> .rt-table--cards) {
+            overflow: visible;
+            margin-inline: 0;
+        }
+
+        .rt-table--cards,
+        .rt-table--cards > tbody,
+        .rt-table--cards > tbody > tr,
+        .rt-table--cards > tbody > tr > th,
+        .rt-table--cards > tbody > tr > td {
+            display: block;
+            width: 100%;
+        }
+
+        .rt-table--cards > thead {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+
+        .rt-table--cards > tbody > tr {
+            border-bottom: 1px solid var(--rt-rule);
+            padding-block: 0.75rem;
+        }
+
+        .rt-table--cards > tbody > tr > th,
+        .rt-table--cards > tbody > tr > td {
+            border: 0;
+            padding: 0.2rem 0 !important;
+        }
+
+        .rt-table--cards > tbody > tr > th,
+        .rt-table--cards > tbody > tr > td.rt-card-title {
+            margin-bottom: 0.375rem;
+        }
+
+        .rt-table--cards > tbody > tr > td[data-label] {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 1rem;
+            text-align: end;
+        }
+
+        .rt-table--cards > tbody > tr > td[data-label]::before {
+            content: attr(data-label);
+            flex: none;
+            color: var(--rt-muted);
+            font-weight: 400;
+            font-size: 0.8125rem;
+            text-align: start;
+        }
+
+        .rt-table--cards > tbody > tr > td.rt-cell-bar {
+            display: block;
+            min-width: 0;
+        }
+
+        .rt-table--cards > tbody > tr > td.rt-cell-bar::before {
+            display: block;
+            margin-bottom: 0.125rem;
+        }
+
+        .rt-table--cards > tbody > tr > td .rt-block {
+            display: inline;
+            margin-inline-start: 0.375rem;
+        }
+
+        .rt-table--cards > tbody > tr > td.rt-row-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.375rem;
+        }
+
+        .rt-table--cards > tbody > tr > td.rt-row-actions > * + * {
+            margin-inline-start: 0;
+        }
+
+        .rt-table--cards > tbody > tr.rt-table__detail > td {
+            background: var(--rt-paper);
+            padding: 0.5rem 0.75rem !important;
+            border-radius: var(--rt-radius);
+        }
+
+        .rt-table--cards td.rt-empty {
+            display: none;
+        }
+
+        .rt-table--cards .rt-office {
+            padding-inline-start: 0 !important;
+        }
+
+        /* Each list row already opens the record, so the View / Edit buttons only crowd a narrow screen. */
+        .fi-ta-row > td.fi-ta-cell:last-child:has(> .fi-ta-actions),
+        .fi-ta-row > td.fi-ta-cell:last-child:has(.fi-ta-actions:only-child),
+        .fi-ta-actions-header-cell {
+            display: none;
+        }
+
+        .rt-metrics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .rt-metrics__item {
+            border-inline-start: 0;
+            border-top: 1px solid var(--rt-rule);
+        }
+
+        .rt-metrics__item:nth-child(-n + 2) {
+            border-top: 0;
+        }
+
+        .rt-metrics__item:nth-child(even) {
+            border-inline-start: 1px solid var(--rt-rule);
+        }
+
+        .rt-metrics__item:last-child:nth-child(odd) {
+            grid-column: span 2;
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {

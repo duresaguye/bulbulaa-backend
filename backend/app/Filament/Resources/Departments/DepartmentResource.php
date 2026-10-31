@@ -7,6 +7,7 @@ use App\Filament\Resources\Departments\Pages\EditDepartment;
 use App\Filament\Resources\Departments\Pages\ListDepartments;
 use App\Filament\Resources\Departments\Schemas\DepartmentForm;
 use App\Filament\Resources\Departments\Tables\DepartmentsTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Models\Department;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -16,6 +17,8 @@ use Filament\Tables\Table;
 
 class DepartmentResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = Department::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

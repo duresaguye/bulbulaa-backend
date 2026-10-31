@@ -94,7 +94,17 @@ class EthiopianCalendar
 
     public static function monthName(int $month): string
     {
-        return MonthlyPlan::ETHIOPIAN_MONTHS[$month];
+        return __(MonthlyPlan::ETHIOPIAN_MONTHS[$month]);
+    }
+
+    /**
+     * Month numbers to names in the current language, for select inputs and filters.
+     *
+     * @return array<int, string>
+     */
+    public static function monthOptions(): array
+    {
+        return array_map(fn (string $name): string => __($name), MonthlyPlan::ETHIOPIAN_MONTHS);
     }
 
     /**
@@ -103,6 +113,19 @@ class EthiopianCalendar
     public static function quarterOfMonth(int $month): int
     {
         return min(4, intdiv($month - 1, 3) + 1);
+    }
+
+    /**
+     * A date as staff read it in any language: Ethiopian date with month name, then the Gregorian date in numbers.
+     * Numbers avoid confusion in Afaan Oromoo, where Ethiopian and Gregorian months share names.
+     */
+    public static function display(\DateTimeInterface $date, bool $withTime = false): string
+    {
+        $date = CarbonImmutable::instance($date)->setTimezone(config('app.timezone'));
+        $ethiopian = self::fromGregorian($date);
+
+        return __(':date E.C.', ['date' => self::format($ethiopian['year'], $ethiopian['month'], $ethiopian['day'])])
+            .' ('.$date->format($withTime ? 'd/m/Y, H:i' : 'd/m/Y').')';
     }
 
     public static function format(int $year, int $month, ?int $day = null): string

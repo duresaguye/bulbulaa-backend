@@ -14,9 +14,9 @@ enum ReviewAction: string implements HasColor, HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::Submitted => 'Submitted',
-            self::Returned => 'Returned for correction',
-            self::Approved => 'Approved',
+            self::Submitted => __('Submitted'),
+            self::Returned => __('Returned for correction'),
+            self::Approved => __('Approved'),
         };
     }
 

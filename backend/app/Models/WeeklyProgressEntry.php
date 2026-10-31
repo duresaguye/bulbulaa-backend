@@ -27,13 +27,13 @@ class WeeklyProgressEntry extends Model
                 || $monthlyPlan->annualTarget->fiscal_year !== $report->ethiopian_fiscal_year
                 || $monthlyPlan->ethiopian_month !== $report->ethiopian_month) {
                 throw ValidationException::withMessages([
-                    'monthly_plan_id' => 'The monthly plan must belong to the report department and Ethiopian reporting month.',
+                    'monthly_plan_id' => __('The monthly plan must belong to the report department and Ethiopian reporting month.'),
                 ]);
             }
 
             if (! $report->isEditable()) {
                 throw ValidationException::withMessages([
-                    'actual_value' => 'Progress can only be changed while the report is a draft or returned for correction.',
+                    'actual_value' => __('Progress can only be changed while the report is a draft or returned for correction.'),
                 ]);
             }
         });
@@ -41,7 +41,7 @@ class WeeklyProgressEntry extends Model
         static::deleting(function (self $entry): void {
             if ($entry->report !== null && ! $entry->report->isEditable()) {
                 throw ValidationException::withMessages([
-                    'actual_value' => 'Progress can only be changed while the report is a draft or returned for correction.',
+                    'actual_value' => __('Progress can only be changed while the report is a draft or returned for correction.'),
                 ]);
             }
         });

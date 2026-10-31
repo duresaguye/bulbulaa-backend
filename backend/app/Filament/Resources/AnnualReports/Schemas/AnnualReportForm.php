@@ -24,11 +24,11 @@ class AnnualReportForm
     {
         return $schema->columns(1)->components([
             ReportFormParts::returnedCallout(),
-            Section::make('Reporting year')
+            Section::make(__('Reporting year'))
                 ->columns(3)
                 ->schema([
                     Select::make('department_id')
-                        ->label('Office')
+                        ->label(__('Office'))
                         ->options(fn (): array => OfficeScope::reportingOfficeOptions())
                         ->default(fn (): ?int => OfficeScope::defaultOfficeId())
                         ->searchable()
@@ -37,7 +37,7 @@ class AnnualReportForm
                         ->disabledOn('edit')
                         ->columnSpan(2),
                     TextInput::make('ethiopian_fiscal_year')
-                        ->label('Year (E.C.)')
+                        ->label(__('Year (E.C.)'))
                         ->numeric()
                         ->minValue(1900)
                         ->maxValue(2200)
@@ -53,34 +53,34 @@ class AnnualReportForm
                                     ->exists();
 
                                 if ($duplicate) {
-                                    $fail('This office already has an annual report for this year.');
+                                    $fail(__('This office already has an annual report for this year.'));
                                 }
                             },
                         ])
                         ->disabledOn('edit'),
                 ]),
-            Section::make('Results for the year')
-                ->description('Calculated from approved monthly reports only. The figures are recorded with the report when it is submitted.')
+            Section::make(__('Results for the year'))
+                ->description(__('Calculated from approved monthly reports only. The figures are recorded with the report when it is submitted.'))
                 ->schema([
                     View::make('filament.reports.annual-results')
                         ->viewData(fn (Get $get): array => [
                             'results' => self::results($get('department_id'), $get('ethiopian_fiscal_year')),
                         ]),
                 ]),
-            Section::make('Annual review')
+            Section::make(__('Annual review'))
                 ->schema([
                     Textarea::make('key_accomplishments')
-                        ->label('Key accomplishments')
+                        ->label(__('Key accomplishments'))
                         ->required()
                         ->rows(5),
                     Textarea::make('missed_targets')
-                        ->label('Missed targets and explanations')
+                        ->label(__('Missed targets and explanations'))
                         ->rows(4),
                     Textarea::make('corrective_actions')
-                        ->label('Corrective actions')
+                        ->label(__('Corrective actions'))
                         ->rows(3),
                     Textarea::make('lessons_learned')
-                        ->label('Lessons learned')
+                        ->label(__('Lessons learned'))
                         ->rows(3),
                     EvidenceUpload::make('annual'),
                 ]),

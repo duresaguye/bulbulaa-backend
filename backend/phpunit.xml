@@ -21,6 +21,8 @@
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="base64:awuvKTJtHkpnTIoHoV49T3Ni6MRGrmUXAgvsI3FlioM="/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <!-- Tests read the English source text; translations have their own tests. -->
+        <env name="APP_LOCALE" value="en"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>
         <env name="CACHE_STORE" value="array"/>

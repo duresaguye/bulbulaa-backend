@@ -14,6 +14,6 @@ class CreateWeeklyProgressReport extends CreateRecord
 
     public function getTitle(): string
     {
-        return 'New weekly report';
+        return __('New weekly report');
     }
 }

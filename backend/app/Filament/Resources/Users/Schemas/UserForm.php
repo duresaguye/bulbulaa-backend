@@ -17,7 +17,7 @@ class UserForm
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->email()
                     ->required()
                     ->maxLength(255)
@@ -33,8 +33,8 @@ class UserForm
                     ->preload()
                     ->required(),
                 Select::make('departments')
-                    ->label('Offices')
-                    ->helperText('The offices this person reports for. Supervisors also see the offices below theirs.')
+                    ->label(__('Offices'))
+                    ->helperText(__('The offices this person reports for. Supervisors also see the offices below theirs.'))
                     ->relationship('departments', 'name')
                     ->multiple()
                     ->preload(),

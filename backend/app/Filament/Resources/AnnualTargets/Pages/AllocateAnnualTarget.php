@@ -5,7 +5,7 @@ namespace App\Filament\Resources\AnnualTargets\Pages;
 use App\Filament\Resources\AnnualTargets\AnnualTargetResource;
 use App\Filament\Support\OfficeScope;
 use App\Models\AnnualTarget;
-use App\Models\MonthlyPlan;
+use App\Services\EthiopianCalendar;
 use App\Services\TargetAssignment;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
@@ -49,7 +49,7 @@ class AllocateAnnualTarget extends Page
         $plans = $this->getRecord()->monthlyPlans()->get()->keyBy('ethiopian_month');
 
         $this->form->fill([
-            'months' => collect(MonthlyPlan::ETHIOPIAN_MONTHS)->mapWithKeys(fn (string $name, int $month): array => [
+            'months' => collect(EthiopianCalendar::monthOptions())->mapWithKeys(fn (string $name, int $month): array => [
                 $month => [
                     'planned_value' => $plans->get($month)?->planned_value,
                     'planned_activities' => $plans->get($month)?->planned_activities,
@@ -60,14 +60,14 @@ class AllocateAnnualTarget extends Page
 
     public function getTitle(): string
     {
-        return 'Allocate across months';
+        return __('Allocate across months');
     }
 
     public function getSubheading(): string
     {
         $target = $this->getRecord();
 
-        return $target->title.', '.$target->department->name.', year '.$target->fiscal_year.' E.C.';
+        return __(':target, :office, year :year E.C.', ['target' => $target->title, 'office' => $target->department->name, 'year' => $target->fiscal_year]);
     }
 
     public function form(Schema $schema): Schema
@@ -78,10 +78,10 @@ class AllocateAnnualTarget extends Page
         return $schema
             ->statePath('data')
             ->components([
-                Section::make('Annual target: '.$target->formatValue($target->target_value).' '.$target->measurement_unit)
-                    ->description($target->aggregation->getDescription().' Leave a month blank if no work is planned.')
+                Section::make(__('Annual target: :value :unit', ['value' => $target->formatValue($target->target_value), 'unit' => $target->measurement_unit]))
+                    ->description($target->aggregation->getDescription().' '.__('Leave a month blank if no work is planned.'))
                     ->schema([
-                        ...collect(MonthlyPlan::ETHIOPIAN_MONTHS)->map(fn (string $name, int $month) => Grid::make(['default' => 1, 'md' => 6])
+                        ...collect(EthiopianCalendar::monthOptions())->map(fn (string $name, int $month) => Grid::make(['default' => 1, 'md' => 6])
                             ->schema([
                                 TextInput::make("months.{$month}.planned_value")
                                     ->label($name)
@@ -91,21 +91,21 @@ class AllocateAnnualTarget extends Page
                                     ->live(onBlur: true)
                                     ->columnSpan(['md' => 2]),
                                 TextInput::make("months.{$month}.planned_activities")
-                                    ->label('Planned activities')
+                                    ->label(__('Planned activities'))
                                     ->maxLength(1000)
                                     ->columnSpan(['md' => 4]),
                             ]))->values()->all(),
                         TextEntry::make('reconciliation')
-                            ->label('Allocation check')
+                            ->label(__('Allocation check'))
                             ->state(fn (Get $get): string => $this->reconciliationText($get('months') ?? []))
                             ->color(fn (Get $get): string => $this->reconciles($get('months') ?? []) ? 'success' : 'warning'),
                     ]),
                 Actions::make([
                     Action::make('save')
-                        ->label('Save allocation')
+                        ->label(__('Save allocation'))
                         ->submit('save'),
                     Action::make('cancel')
-                        ->label('Cancel')
+                        ->label(__('Cancel'))
                         ->color('gray')
                         ->url(AnnualTargetResource::getUrl('view', ['record' => $target])),
                 ]),
@@ -119,7 +119,7 @@ class AllocateAnnualTarget extends Page
 
         app(TargetAssignment::class)->allocate(OfficeScope::user(), $target, $months);
 
-        $notification = Notification::make()->title('Monthly allocation saved');
+        $notification = Notification::make()->title(__('Monthly allocation saved'));
 
         if ($this->reconciles($months)) {
             $notification->success();
@@ -159,16 +159,16 @@ class AllocateAnnualTarget extends Page
         $target = $this->getRecord();
 
         if (! $target->aggregation->isAdditive()) {
-            return 'Monthly values for this indicator are levels or rates, so they are not added together.';
+            return __('Monthly values for this indicator are levels or rates, so they are not added together.');
         }
 
         $total = $this->allocatedTotal($months);
         $gap = (float) $target->target_value - $total;
 
         return match (true) {
-            round($gap, 2) == 0 => 'Monthly targets total '.$target->formatValue($total).', matching the annual target.',
-            $gap > 0 => 'Monthly targets total '.$target->formatValue($total).'. '.$target->formatValue($gap).' of the annual target is not yet allocated.',
-            default => 'Monthly targets total '.$target->formatValue($total).', which is '.$target->formatValue(abs($gap)).' more than the annual target.',
+            round($gap, 2) == 0 => __('Monthly targets total :total, matching the annual target.', ['total' => $target->formatValue($total)]),
+            $gap > 0 => __('Monthly targets total :total. :gap of the annual target is not yet allocated.', ['total' => $target->formatValue($total), 'gap' => $target->formatValue($gap)]),
+            default => __('Monthly targets total :total, which is :gap more than the annual target.', ['total' => $target->formatValue($total), 'gap' => $target->formatValue(abs($gap))]),
         };
     }
 }

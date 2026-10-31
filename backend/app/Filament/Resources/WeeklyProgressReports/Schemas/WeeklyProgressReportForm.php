@@ -7,6 +7,7 @@ use App\Filament\Support\OfficeScope;
 use App\Filament\Support\ReportFormParts;
 use App\Models\MonthlyPlan;
 use App\Models\WeeklyProgressReport;
+use App\Services\EthiopianCalendar;
 use App\Services\ReportingCalendar;
 use App\Services\TargetProgress;
 use Closure;
@@ -20,6 +21,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class WeeklyProgressReportForm
@@ -28,12 +30,12 @@ class WeeklyProgressReportForm
     {
         return $schema->columns(1)->components([
             ReportFormParts::returnedCallout(),
-            Section::make('Reporting period')
-                ->description('The office and Ethiopian calendar week this update covers. The period cannot change once results are saved.')
+            Section::make(__('Reporting period'))
+                ->description(__('The office and Ethiopian calendar week this update covers. The period cannot change once results are saved.'))
                 ->columns(['default' => 1, 'md' => 3])
                 ->schema([
                     Select::make('department_id')
-                        ->label('Office')
+                        ->label(__('Office'))
                         ->options(fn (): array => OfficeScope::reportingOfficeOptions())
                         ->default(fn (): ?int => self::defaultPeriod()['department_id'])
                         ->searchable()
@@ -43,7 +45,7 @@ class WeeklyProgressReportForm
                         ->disabledOn('edit')
                         ->columnSpanFull(),
                     TextInput::make('ethiopian_fiscal_year')
-                        ->label('Year (E.C.)')
+                        ->label(__('Year (E.C.)'))
                         ->numeric()
                         ->minValue(1900)
                         ->maxValue(2200)
@@ -53,16 +55,16 @@ class WeeklyProgressReportForm
                         ->afterStateUpdated(fn (Get $get, Set $set) => self::refreshEntries($get, $set))
                         ->disabledOn('edit'),
                     Select::make('ethiopian_month')
-                        ->label('Month')
-                        ->options(MonthlyPlan::ETHIOPIAN_MONTHS)
+                        ->label(__('Month'))
+                        ->options(EthiopianCalendar::monthOptions())
                         ->default(fn (): int => self::defaultPeriod()['month'])
                         ->required()
                         ->live()
                         ->afterStateUpdated(fn (Get $get, Set $set) => self::refreshEntries($get, $set))
                         ->disabledOn('edit'),
                     Select::make('week_number')
-                        ->label('Week')
-                        ->options([1 => 'Week 1 (days 1–7)', 2 => 'Week 2 (days 8–14)', 3 => 'Week 3 (days 15–21)', 4 => 'Week 4 (days 22–28)', 5 => 'Week 5 (days 29–30)'])
+                        ->label(__('Week'))
+                        ->options([1 => __('Week 1 (days 1–7)'), 2 => __('Week 2 (days 8–14)'), 3 => __('Week 3 (days 15–21)'), 4 => __('Week 4 (days 22–28)'), 5 => __('Week 5 (days 29–30)')])
                         ->default(fn (): int => self::defaultPeriod()['week'])
                         ->required()
                         ->rules([
@@ -76,18 +78,18 @@ class WeeklyProgressReportForm
                                     ->exists();
 
                                 if ($duplicate) {
-                                    $fail('This office already has a report for this week. Open the existing report instead.');
+                                    $fail(__('This office already has a report for this week. Open the existing report instead.'));
                                 }
                             },
                         ])
                         ->disabledOn('edit'),
                 ]),
-            Section::make('Results against this month\'s targets')
-                ->description('One row for each monthly target. Enter what was achieved this week only. Remove a row if there was no work on that target.')
+            Section::make(__('Results against this month\'s targets'))
+                ->description(__('One row for each monthly target. Enter what was achieved this week only. Remove a row if there was no work on that target.'))
                 ->schema([
                     TextEntry::make('no_targets')
                         ->hiddenLabel()
-                        ->state('No monthly targets are allocated to this office for the selected month. The office head allocates annual targets across months under Annual targets.')
+                        ->state(__('No monthly targets are allocated to this office for the selected month. The office head allocates annual targets across months under Annual targets.'))
                         ->color('warning')
                         ->visible(fn (Get $get): bool => blank($get('entries'))),
                     Repeater::make('entries')
@@ -97,18 +99,19 @@ class WeeklyProgressReportForm
                         ->addable(false)
                         ->reorderable(false)
                         ->minItems(1)
-                        ->validationMessages(['min' => 'Record a result for at least one monthly target.'])
+                        ->validationMessages(['min' => __('Record a result for at least one monthly target.')])
                         ->required()
                         ->itemLabel(fn (array $state): ?string => self::plan($state['monthly_plan_id'] ?? null)?->annualTarget->title)
                         ->columns(3)
                         ->schema([
                             Hidden::make('monthly_plan_id')->required(),
                             TextEntry::make('plan_context')
-                                ->label('This month')
-                                ->state(fn (Get $get): string => self::planContext(self::plan($get('monthly_plan_id'))))
+                                ->hiddenLabel()
+                                ->state(fn (Get $get): HtmlString => self::planContext(self::plan($get('monthly_plan_id'))))
+                                ->html()
                                 ->columnSpan(2),
                             TextInput::make('actual_value')
-                                ->label('Achieved this week')
+                                ->label(__('Achieved this week'))
                                 ->numeric()
                                 ->minValue(0)
                                 ->suffix(fn (Get $get): ?string => self::plan($get('monthly_plan_id'))?->annualTarget->measurement_unit)
@@ -116,24 +119,24 @@ class WeeklyProgressReportForm
                                 ->live(onBlur: true)
                                 ->helperText(fn (Get $get): ?string => self::achievementHint(self::plan($get('monthly_plan_id')), $get('actual_value'))),
                             Textarea::make('progress_summary')
-                                ->label('Note (optional)')
-                                ->placeholder('What was done, or why the result differs from plan')
+                                ->label(__('Note (optional)'))
+                                ->placeholder(__('What was done, or why the result differs from plan'))
                                 ->rows(2)
                                 ->columnSpanFull(),
                         ])
                         ->columnSpanFull(),
                 ]),
-            Section::make('This week')
+            Section::make(__('This week'))
                 ->schema([
                     Textarea::make('achievements')
-                        ->label('Activities completed')
+                        ->label(__('Activities completed'))
                         ->required()
                         ->rows(4),
                     Textarea::make('challenges')
-                        ->label('Challenges or delays')
+                        ->label(__('Challenges or delays'))
                         ->rows(3),
                     Textarea::make('next_steps')
-                        ->label('Priorities for next week')
+                        ->label(__('Priorities for next week'))
                         ->rows(3),
                     EvidenceUpload::make('weekly'),
                 ]),
@@ -214,20 +217,19 @@ class WeeklyProgressReportForm
         return once(fn () => MonthlyPlan::with('annualTarget')->find($planId));
     }
 
-    private static function planContext(?MonthlyPlan $plan): string
+    private static function planContext(?MonthlyPlan $plan): HtmlString
     {
         if ($plan === null) {
-            return '';
+            return new HtmlString('');
         }
 
-        $target = $plan->annualTarget;
-        $reported = app(TargetProgress::class)->weeklyTotalForPlan($plan);
-        $context = 'Target '.$target->formatWithUnit($plan->planned_value)
-            .'. Reported in earlier weekly reports: '.$target->formatValue($reported ?? 0).'.';
-
-        return filled($plan->planned_activities)
-            ? $context.' Planned: '.Str::limit($plan->planned_activities, 160)
-            : $context;
+        return new HtmlString(view('filament.reports.plan-context', [
+            'target' => $plan->annualTarget,
+            'plannedValue' => $plan->planned_value,
+            'reported' => app(TargetProgress::class)->weeklyTotalForPlan($plan),
+            'reportedLabel' => __('Reported in earlier weeks'),
+            'activities' => $plan->planned_activities,
+        ])->render());
     }
 
     private static function achievementHint(?MonthlyPlan $plan, mixed $actual): ?string
@@ -238,6 +240,6 @@ class WeeklyProgressReportForm
 
         $percentage = TargetProgress::achievement((float) $actual, $plan->planned_value);
 
-        return $percentage === null ? null : "{$percentage}% of this month's target.";
+        return $percentage === null ? null : __(':percent% of this month\'s target.', ['percent' => $percentage]);
     }
 }

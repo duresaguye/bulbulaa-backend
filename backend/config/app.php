@@ -16,6 +16,18 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
+    | The town this installation serves. Shown in the admin brand, sign-in page and page titles.
+    */
+
+    'town_name' => env('TOWN_NAME', 'Bulbulaa'),
+
+    /*
+    | The public website that shows published posts, for "View on website" links. Leave empty to hide the links.
+    */
+
+    'website_url' => env('WEBSITE_URL'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
@@ -78,7 +90,7 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'om'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
