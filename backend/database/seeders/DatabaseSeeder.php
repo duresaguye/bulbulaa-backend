@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'reports.review', 'label' => 'Approve or return reports from subordinate offices'],
             ['name' => 'targets.distribute', 'label' => 'Distribute targets to subordinate offices'],
             ['name' => 'cms.manage', 'label' => 'Manage public content'],
+            ['name' => 'citizen_reports.manage', 'label' => 'Handle messages from the public'],
         ])->mapWithKeys(function (array $attributes): array {
             $permission = Permission::firstOrCreate(
                 ['name' => $attributes['name']],
@@ -46,7 +47,7 @@ class DatabaseSeeder extends Seeder
             ],
             'town_leadership' => [
                 'label' => 'Town leadership',
-                'permissions' => ['departments.manage', 'reports.view', 'reports.targets.manage', 'reports.review', 'audit_logs.view'],
+                'permissions' => ['departments.manage', 'reports.view', 'reports.targets.manage', 'reports.review', 'audit_logs.view', 'citizen_reports.manage'],
             ],
             'supervisor' => [
                 'label' => 'Supervising official',
@@ -62,7 +63,7 @@ class DatabaseSeeder extends Seeder
             ],
             'content_manager' => [
                 'label' => 'Content manager',
-                'permissions' => ['cms.manage'],
+                'permissions' => ['cms.manage', 'citizen_reports.manage'],
             ],
         ];
 

@@ -9,7 +9,10 @@ use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +37,11 @@ class AppServiceProvider extends ServiceProvider
         FileUpload::configureUsing(fn (FileUpload $upload) => $upload->placeholder(fn (): string => __('Drag a file here or click to choose one')));
         DatePicker::configureUsing(fn (DatePicker $picker) => $picker->native(false)->displayFormat('d/m/Y'));
         DateTimePicker::configureUsing(fn (DateTimePicker $picker) => $picker->native(false)->displayFormat('d/m/Y H:i'));
+
+        RateLimiter::for('public-reports', fn (Request $request): array => [
+            Limit::perMinute(3)->by('report-minute:'.$request->ip()),
+            Limit::perDay(20)->by('report-day:'.$request->ip()),
+        ]);
 
         Gate::before(function (?User $user, string $ability): ?bool {
             if ($user === null) {

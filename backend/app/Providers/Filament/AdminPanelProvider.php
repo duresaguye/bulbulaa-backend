@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Support\InitialsAvatarProvider;
+use App\Http\Controllers\CitizenReportPhotoController;
 use App\Http\Controllers\ReportExportController;
 use App\Http\Middleware\SetLocale;
 use App\Support\Locales;
@@ -104,6 +105,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->middleware([SetLocale::class], isPersistent: true)
             ->authenticatedRoutes(function (): void {
+                Route::get('citizen-reports/{report}/photos/{index}', [CitizenReportPhotoController::class, 'show'])->whereNumber(['report', 'index'])->name('citizen-reports.photo');
                 Route::get('exports/office-performance/print', [ReportExportController::class, 'printOfficePerformance'])->name('exports.office-performance.print');
                 Route::get('exports/office-performance/excel', [ReportExportController::class, 'excelOfficePerformance'])->name('exports.office-performance.excel');
                 Route::get('exports/{type}/{record}/print', [ReportExportController::class, 'printReport'])->whereIn('type', ['weekly', 'monthly', 'annual'])->whereNumber('record')->name('exports.report.print');

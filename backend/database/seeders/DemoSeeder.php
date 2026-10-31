@@ -2,10 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Enums\CitizenReportStatus;
 use App\Enums\PostType;
+use App\Enums\ReportCategory;
 use App\Enums\ReportStatus;
 use App\Enums\ReviewAction;
 use App\Models\AnnualTarget;
+use App\Models\CitizenReport;
 use App\Models\Department;
 use App\Models\MonthlyPlan;
 use App\Models\MonthlyReport;
@@ -48,6 +51,7 @@ class DemoSeeder extends Seeder
         $users = $this->users($offices);
         $targets = $this->targets($offices, $year);
         $this->posts();
+        $this->citizenReports($offices);
 
         // Reports for every completed month and week so far this year.
         foreach ($targets as $code => $officeTargets) {
@@ -384,6 +388,41 @@ class DemoSeeder extends Seeder
                 'created_by' => $editor->id,
                 'updated_by' => $editor->id,
             ]);
+        }
+    }
+
+    /**
+     * Fictional messages from the public in different states.
+     *
+     * @param  array<string, Department>  $offices
+     */
+    private function citizenReports(array $offices): void
+    {
+        if (CitizenReport::query()->exists()) {
+            return;
+        }
+
+        $reports = [
+            [ReportCategory::Complaint, "Ujummoon bishaanii naannoo mana barumsaa cabee bishaan guyyaa sadiif dhangala'aa jira.", 'Naannoo 02, mana barumsaa cinaa', true, null, CitizenReportStatus::New, null],
+            [ReportCategory::Safety, 'Ibsaan daandii buufata konkolaataa irraa halkan hin ibsu; dukkana keessa namoonni sodaachaa jiru.', 'Buufata konkolaataa', true, null, CitizenReportStatus::InProgress, 'URB'],
+            [ReportCategory::Message, 'Hayyama daldalaa haaromsuuf sanadoota akkamii fiduu qaba?', null, false, ['Demo Resident', '+251 900 000 000'], CitizenReportStatus::Resolved, 'TRD'],
+            [ReportCategory::Suggestion, 'Gabaa giddugaleessaa keessatti iddoo kosii itti gatan dabalataa kaa\'uun gaarii ta\'a.', 'Gabaa giddugaleessaa', true, null, CitizenReportStatus::New, null],
+        ];
+
+        foreach ($reports as $i => [$category, $details, $location, $anonymous, $person, $status, $office]) {
+            $report = CitizenReport::create([
+                'category' => $category,
+                'details' => $details,
+                'location' => $location,
+                'is_anonymous' => $anonymous,
+                'reporter_name' => $person[0] ?? null,
+                'reporter_contact' => $person[1] ?? null,
+                'locale' => 'om',
+                'status' => $status,
+                'department_id' => $office ? $offices[$office]->id : null,
+                'staff_note' => $status === CitizenReportStatus::Resolved ? 'Fictional note: answered by phone.' : null,
+            ]);
+            $report->forceFill(['created_at' => now()->subHours(30 - $i * 7)])->saveQuietly();
         }
     }
 }
