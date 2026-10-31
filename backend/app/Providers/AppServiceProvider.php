@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Services\ReportingCalendar;
 use App\Services\TargetProgress;
 use Carbon\Carbon;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
             'before' => ':time dura',
             'after' => ':time booda',
         ]);
+
+        /** The upload box's own text is English-only, and browser date inputs follow the computer's region. */
+        FileUpload::configureUsing(fn (FileUpload $upload) => $upload->placeholder(fn (): string => __('Drag a file here or click to choose one')));
+        DatePicker::configureUsing(fn (DatePicker $picker) => $picker->native(false)->displayFormat('d/m/Y'));
+        DateTimePicker::configureUsing(fn (DateTimePicker $picker) => $picker->native(false)->displayFormat('d/m/Y H:i'));
 
         Gate::before(function (?User $user, string $ability): ?bool {
             if ($user === null) {

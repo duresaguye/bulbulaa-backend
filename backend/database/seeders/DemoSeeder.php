@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PostType;
 use App\Enums\ReportStatus;
 use App\Enums\ReviewAction;
 use App\Models\AnnualTarget;
 use App\Models\Department;
 use App\Models\MonthlyPlan;
 use App\Models\MonthlyReport;
+use App\Models\Post;
 use App\Models\ReportReview;
 use App\Models\Role;
 use App\Models\User;
@@ -45,6 +47,7 @@ class DemoSeeder extends Seeder
         $offices = $this->offices();
         $users = $this->users($offices);
         $targets = $this->targets($offices, $year);
+        $this->posts();
 
         // Reports for every completed month and week so far this year.
         foreach ($targets as $code => $officeTargets) {
@@ -317,5 +320,70 @@ class DemoSeeder extends Seeder
         $review->created_at = $at;
         $review->updated_at = $at;
         $review->save();
+    }
+
+    /**
+     * Fictional website posts in all three languages, including a draft and a scheduled post.
+     */
+    private function posts(): void
+    {
+        $editor = User::firstOrCreate(
+            ['email' => 'content@demo.test'],
+            ['name' => 'Demo Content Manager', 'password' => self::PASSWORD],
+        );
+        $editor->roles()->syncWithoutDetaching([Role::where('name', 'content_manager')->value('id')]);
+
+        $posts = [
+            [
+                'type' => PostType::News, 'slug' => 'demo-market-road-opened', 'featured' => true, 'published' => now()->subDays(2),
+                'title' => ['om' => 'Daandiin gabaa haaraan tajaajilaaf banameera', 'am' => 'አዲሱ የገበያ መንገድ ለአገልግሎት ክፍት ሆነ', 'en' => 'New market road opens to traffic'],
+                'excerpt' => ['om' => 'Daandiin dhagaa gabaa giddugaleessaa fi buufata konkolaataa walqunnamsiisu xumuramee banameera.', 'am' => 'ማዕከላዊውን ገበያና የአውቶቡስ ጣቢያውን የሚያገናኘው የኮብልስቶን መንገድ ተጠናቆ ተከፍቷል።', 'en' => 'The cobblestone road linking the central market and the bus station is complete and open.'],
+                'body' => ['om' => "<p>Daandiin kiloomeetira 1.2 dheeratu hojii ji'a jahaa booda xumurameera.</p><p>Hawaasni naannoo hojii kana irratti hirmaachuu isaaniif galateeffamaniiru.</p>", 'am' => '<p>1.2 ኪሎ ሜትር የሚረዝመው መንገድ ከስድስት ወር ሥራ በኋላ ተጠናቋል።</p>', 'en' => '<p>The 1.2 km road was completed after six months of work.</p><p>Residents were thanked for taking part in the work.</p>'],
+            ],
+            [
+                'type' => PostType::Announcement, 'slug' => 'demo-water-interruption', 'featured' => false, 'published' => now()->subDay(), 'deadline' => now()->addDays(5),
+                'title' => ['om' => "Beeksisa: Bishaan sa'aatii muraasaaf ni dhaabata", 'am' => 'ማስታወቂያ፦ ውሃ ለጥቂት ሰዓታት ይቋረጣል', 'en' => 'Notice: Water supply interruption'],
+                'excerpt' => ['om' => 'Sababa suphaa ujummoo ijootiin bishaan naannoo 02 keessatti guyyaa Sanbataa ganama ni dhaabata.', 'am' => 'በዋናው ቧንቧ ጥገና ምክንያት በቀበሌ 02 ቅዳሜ ጠዋት ውሃ ይቋረጣል።', 'en' => 'Because of main pipe repairs, water in kebele 02 will be off on Saturday morning.'],
+                'body' => ['om' => '<p>Jiraattonni bishaan kuusatanii akka turan gorfamu.</p>', 'am' => '<p>ነዋሪዎች ውሃ አጠራቅመው እንዲቆዩ ይመከራሉ።</p>', 'en' => '<p>Residents are advised to store water in advance.</p>'],
+            ],
+            [
+                'type' => PostType::Vacancy, 'slug' => 'demo-vacancy-accountant', 'featured' => false, 'published' => now()->subDays(3), 'deadline' => now()->addDays(10),
+                'title' => ['om' => 'Beeksisa hojii: Herregaa', 'am' => 'የሥራ ማስታወቂያ፦ የሂሳብ ባለሙያ', 'en' => 'Vacancy: Accountant'],
+                'excerpt' => ['om' => 'Waajjirri maallaqaa herregaa tokko qacaruu barbaada. Iyyannoon hanga guyyaa xumuraatti ni fudhatama.', 'am' => 'የፋይናንስ ጽሕፈት ቤቱ አንድ የሂሳብ ባለሙያ መቅጠር ይፈልጋል።', 'en' => 'The finance office is hiring one accountant. Applications are accepted until the deadline.'],
+                'body' => ['om' => '<ul><li>Digrii herreguu</li><li>Muuxannoo waggaa 2</li></ul>', 'am' => '<ul><li>በሂሳብ አያያዝ ዲግሪ</li><li>የ2 ዓመት ልምድ</li></ul>', 'en' => '<ul><li>Degree in accounting</li><li>2 years of experience</li></ul>'],
+            ],
+            [
+                'type' => PostType::Tender, 'slug' => 'demo-tender-office-furniture', 'featured' => false, 'published' => now()->subDays(4), 'deadline' => now()->addDays(15),
+                'title' => ['om' => 'Caalbaasii: Meeshaalee waajjiraa', 'am' => 'ጨረታ፦ የቢሮ ዕቃዎች', 'en' => 'Tender: Office furniture'],
+                'excerpt' => ['om' => 'Bulchiinsi magaalaa meeshaalee waajjiraa bituuf caalbaasii banaa baaseera.', 'am' => 'የከተማ አስተዳደሩ የቢሮ ዕቃዎችን ለመግዛት ግልጽ ጨረታ አውጥቷል።', 'en' => 'The city administration invites bids to supply office furniture.'],
+                'body' => ['om' => '<p>Sanadni caalbaasii waajjira bittaa irraa argama.</p>', 'am' => '<p>የጨረታ ሰነዱ ከግዥ ጽሕፈት ቤት ይገኛል።</p>', 'en' => '<p>Bid documents are available from the procurement office.</p>'],
+            ],
+            [
+                'type' => PostType::News, 'slug' => 'demo-draft-cleanup-campaign', 'featured' => false, 'published' => null,
+                'title' => ['om' => 'Duula qulqullina magaalaa (wixinee)', 'am' => null, 'en' => 'City clean-up campaign (draft)'],
+                'excerpt' => ['om' => 'Wixinee: ammallee hin maxxanfamne.', 'am' => null, 'en' => null],
+                'body' => ['om' => '<p>Wixinee.</p>', 'am' => null, 'en' => null],
+            ],
+            [
+                'type' => PostType::Announcement, 'slug' => 'demo-scheduled-town-meeting', 'featured' => false, 'published' => now()->addDays(3),
+                'title' => ['om' => "Walgahii hawaasaa (yeroo murtaa'eef)", 'am' => 'የሕዝብ ስብሰባ', 'en' => 'Town meeting (scheduled)'],
+                'excerpt' => ['om' => 'Guyyaa sadii booda ofumaan ni maxxanfama.', 'am' => null, 'en' => null],
+                'body' => ['om' => '<p>Yeroo murtaa\'eef.</p>', 'am' => null, 'en' => null],
+            ],
+        ];
+
+        foreach ($posts as $post) {
+            Post::firstOrCreate(['slug' => $post['slug']], [
+                'type' => $post['type'],
+                'title' => $post['title'],
+                'excerpt' => $post['excerpt'],
+                'body' => $post['body'],
+                'is_featured' => $post['featured'],
+                'published_at' => $post['published'],
+                'deadline_on' => $post['deadline'] ?? null,
+                'created_by' => $editor->id,
+                'updated_by' => $editor->id,
+            ]);
+        }
     }
 }

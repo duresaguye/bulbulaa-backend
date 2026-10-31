@@ -81,6 +81,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make(fn (): string => __('Planning')),
                 NavigationGroup::make(fn (): string => __('Reports')),
                 NavigationGroup::make(fn (): string => __('Oversight')),
+                NavigationGroup::make(fn (): string => __('Website')),
                 NavigationGroup::make(fn (): string => __('Organization')),
                 NavigationGroup::make(fn (): string => __('Administration'))->collapsed(),
             ])

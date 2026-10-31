@@ -22,6 +22,12 @@ return [
     'town_name' => env('TOWN_NAME', 'Bulbulaa'),
 
     /*
+    | The public website that shows published posts, for "View on website" links. Leave empty to hide the links.
+    */
+
+    'website_url' => env('WEBSITE_URL'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
