@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      target: runtime
+    restart: unless-stopped
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: reven_town
+      DB_USERNAME: laravel
+      DB_PASSWORD: laravel
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - laravel_storage:/var/www/html/storage/app
+
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: reven_town
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  web:
+    build:
+      context: .
+      target: web
+    depends_on:
+      - app
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+
+volumes:
+  laravel_storage:
+  mysql_data:
