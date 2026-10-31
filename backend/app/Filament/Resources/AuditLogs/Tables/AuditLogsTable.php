@@ -16,13 +16,13 @@ class AuditLogsTable
         return $table
             ->columns([
                 TextColumn::make('created_at')
-                    ->label('When')
+                    ->label(__('When'))
                     ->dateTime('j M Y, H:i')
-                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->user?->name ?? 'System'))
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->user?->name ?? __('System')))
                     ->sortable(),
                 TextColumn::make('user.name')
-                    ->label('By')
-                    ->placeholder('System')
+                    ->label(__('By'))
+                    ->placeholder(__('System'))
                     ->searchable()
                     ->visibleFrom('md'),
                 TextColumn::make('event')
@@ -34,29 +34,29 @@ class AuditLogsTable
                     })
                     ->searchable(),
                 TextColumn::make('auditable_type')
-                    ->label('Record')
+                    ->label(__('Record'))
                     ->formatStateUsing(fn (?string $state, $record): string => Str::headline(class_basename((string) $state)).' #'.$record->auditable_id)
                     ->searchable()
                     ->visibleFrom('sm'),
                 TextColumn::make('new_values')
-                    ->label('New values')
+                    ->label(__('New values'))
                     ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state) : (string) $state)
                     ->limit(80)
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('old_values')
-                    ->label('Previous values')
+                    ->label(__('Previous values'))
                     ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state) : (string) $state)
                     ->limit(80)
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('ip_address')
-                    ->label('IP address')
+                    ->label(__('IP address'))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('event')->options([
-                    'created' => 'Created',
-                    'updated' => 'Updated',
-                    'deleted' => 'Deleted',
+                    'created' => __('Created'),
+                    'updated' => __('Updated'),
+                    'deleted' => __('Deleted'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

@@ -7,6 +7,7 @@ use App\Filament\Resources\AnnualReports\Pages\EditAnnualReport;
 use App\Filament\Resources\AnnualReports\Pages\ListAnnualReports;
 use App\Filament\Resources\AnnualReports\Pages\ViewAnnualReport;
 use App\Filament\Resources\AnnualReports\Schemas\AnnualReportForm;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Filament\Support\OfficeScope;
 use App\Filament\Support\ReportTableParts;
 use App\Models\AnnualReport;
@@ -23,6 +24,8 @@ use Illuminate\Support\HtmlString;
 
 class AnnualReportResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = AnnualReport::class;
 
     protected static bool $hasTitleCaseModelLabel = false;
@@ -49,15 +52,15 @@ class AnnualReportResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('department.name')
-                    ->label('Office')
+                    ->label(__('Office'))
                     ->wrap()
-                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail('Year '.$record->ethiopian_fiscal_year.' E.C.'))
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail(__('Year :year E.C.', ['year' => $record->ethiopian_fiscal_year])))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('ethiopian_fiscal_year')->label('Year (E.C.)')->sortable()->visibleFrom('md'),
+                TextColumn::make('ethiopian_fiscal_year')->label(__('Year (E.C.)'))->sortable()->visibleFrom('md'),
                 ReportTableParts::statusColumn(),
-                TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable()->visibleFrom('lg'),
-                TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable()->visibleFrom('md'),
+                TextColumn::make('preparedBy.name')->label(__('Prepared by'))->toggleable()->visibleFrom('lg'),
+                TextColumn::make('submitted_at')->label(__('Submitted'))->since()->dateTimeTooltip()->placeholder(__('Not submitted'))->sortable()->visibleFrom('md'),
             ])
             ->defaultSort('ethiopian_fiscal_year', 'desc')
             ->filters([
@@ -66,8 +69,8 @@ class AnnualReportResource extends Resource
                 ReportTableParts::yearFilter('annual_reports'),
             ])
             ->recordActions([ViewAction::make(), EditAction::make()])
-            ->emptyStateHeading('No annual reports yet')
-            ->emptyStateDescription('At the end of the year each office reports its results against its annual targets.');
+            ->emptyStateHeading(__('No annual reports yet'))
+            ->emptyStateDescription(__('At the end of the year each office reports its results against its annual targets.'));
     }
 
     public static function getEloquentQuery(): Builder

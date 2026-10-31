@@ -9,6 +9,7 @@ use App\Filament\Support\ReportFormParts;
 use App\Models\MonthlyPlan;
 use App\Models\MonthlyReport;
 use App\Models\WeeklyProgressReport;
+use App\Services\EthiopianCalendar;
 use App\Services\ReportingCalendar;
 use App\Services\TargetProgress;
 use Closure;
@@ -31,12 +32,12 @@ class MonthlyReportForm
     {
         return $schema->columns(1)->components([
             ReportFormParts::returnedCallout(),
-            Section::make('Reporting period')
-                ->description('Results and the activity summary are filled in from this month\'s submitted weekly reports. Check and adjust them before submitting.')
+            Section::make(__('Reporting period'))
+                ->description(__('Results and the activity summary are filled in from this month\'s submitted weekly reports. Check and adjust them before submitting.'))
                 ->columns(['default' => 1, 'md' => 2])
                 ->schema([
                     Select::make('department_id')
-                        ->label('Office')
+                        ->label(__('Office'))
                         ->options(fn (): array => OfficeScope::reportingOfficeOptions())
                         ->default(fn (): ?int => self::defaultPeriod()['department_id'])
                         ->searchable()
@@ -46,7 +47,7 @@ class MonthlyReportForm
                         ->disabledOn('edit')
                         ->columnSpanFull(),
                     TextInput::make('ethiopian_fiscal_year')
-                        ->label('Year (E.C.)')
+                        ->label(__('Year (E.C.)'))
                         ->numeric()
                         ->minValue(1900)
                         ->maxValue(2200)
@@ -56,8 +57,8 @@ class MonthlyReportForm
                         ->afterStateUpdated(fn (Get $get, Set $set) => self::refreshFromWeekly($get, $set))
                         ->disabledOn('edit'),
                     Select::make('ethiopian_month')
-                        ->label('Month')
-                        ->options(MonthlyPlan::ETHIOPIAN_MONTHS)
+                        ->label(__('Month'))
+                        ->options(EthiopianCalendar::monthOptions())
                         ->default(fn (): int => self::defaultPeriod()['month'])
                         ->required()
                         ->live()
@@ -72,17 +73,17 @@ class MonthlyReportForm
                                     ->exists();
 
                                 if ($duplicate) {
-                                    $fail('This office already has a monthly report for this month. Open the existing report instead.');
+                                    $fail(__('This office already has a monthly report for this month. Open the existing report instead.'));
                                 }
                             },
                         ])
                         ->disabledOn('edit'),
                 ]),
-            Section::make('Results against monthly targets')
+            Section::make(__('Results against monthly targets'))
                 ->schema([
                     TextEntry::make('no_targets')
                         ->hiddenLabel()
-                        ->state('No monthly targets are allocated to this office for the selected month.')
+                        ->state(__('No monthly targets are allocated to this office for the selected month.'))
                         ->color('warning')
                         ->visible(fn (Get $get): bool => blank($get('lines'))),
                     Repeater::make('lines')
@@ -93,7 +94,7 @@ class MonthlyReportForm
                         ->reorderable(false)
                         ->deletable(false)
                         ->minItems(1)
-                        ->validationMessages(['min' => 'This month has no targets to report against.'])
+                        ->validationMessages(['min' => __('This month has no targets to report against.')])
                         ->required()
                         ->itemLabel(fn (array $state): ?string => self::plan($state['monthly_plan_id'] ?? null)?->annualTarget->title)
                         ->columns(3)
@@ -105,7 +106,7 @@ class MonthlyReportForm
                                 ->html()
                                 ->columnSpan(2),
                             TextInput::make('actual_value')
-                                ->label('Actual for the month')
+                                ->label(__('Actual for the month'))
                                 ->numeric()
                                 ->minValue(0)
                                 ->suffix(fn (Get $get): ?string => self::plan($get('monthly_plan_id'))?->annualTarget->measurement_unit)
@@ -114,27 +115,27 @@ class MonthlyReportForm
                                 ->helperText(fn (Get $get): ?string => self::achievementHint(self::plan($get('monthly_plan_id')), $get('actual_value'))),
                             Textarea::make('variance_note')
                                 ->label(fn (Get $get): string => self::isBelowTarget(self::plan($get('monthly_plan_id')), $get('actual_value'))
-                                    ? 'Why the target was missed'
-                                    : 'Note (optional)')
+                                    ? __('Why the target was missed')
+                                    : __('Note (optional)'))
                                 ->required(fn (Get $get): bool => self::isBelowTarget(self::plan($get('monthly_plan_id')), $get('actual_value')))
-                                ->validationMessages(['required' => 'Explain why the result is below the monthly target.'])
+                                ->validationMessages(['required' => __('Explain why the result is below the monthly target.')])
                                 ->rows(2)
                                 ->columnSpanFull(),
                         ])
                         ->columnSpanFull(),
                 ]),
-            Section::make('Monthly summary')
+            Section::make(__('Monthly summary'))
                 ->schema([
                     Textarea::make('summary')
-                        ->label('Summary of completed activities')
+                        ->label(__('Summary of completed activities'))
                         ->default(fn (): ?string => self::weeklySummary(...array_slice(array_values(self::defaultPeriod()), 0, 3)))
                         ->required()
                         ->rows(6),
                     Textarea::make('missed_target_reasons')
-                        ->label('Reasons for missed targets')
+                        ->label(__('Reasons for missed targets'))
                         ->rows(3),
                     Textarea::make('corrective_actions')
-                        ->label('Corrective actions')
+                        ->label(__('Corrective actions'))
                         ->rows(3),
                     EvidenceUpload::make('monthly'),
                 ]),
@@ -205,7 +206,7 @@ class MonthlyReportForm
             ->whereIn('status', ReportStatus::reportedValues())
             ->orderBy('week_number')
             ->get()
-            ->map(fn (WeeklyProgressReport $report): string => "Week {$report->week_number}: {$report->achievements}")
+            ->map(fn (WeeklyProgressReport $report): string => __('Week :week: :text', ['week' => $report->week_number, 'text' => $report->achievements]))
             ->implode("\n\n");
 
         return $text === '' ? null : $text;
@@ -245,7 +246,7 @@ class MonthlyReportForm
             'target' => $plan->annualTarget,
             'plannedValue' => $plan->planned_value,
             'reported' => app(TargetProgress::class)->weeklyTotalForPlan($plan),
-            'reportedLabel' => 'Weekly reports total',
+            'reportedLabel' => __('Weekly reports total'),
             'activities' => null,
         ])->render());
     }
@@ -263,6 +264,6 @@ class MonthlyReportForm
 
         $percentage = TargetProgress::achievement((float) $actual, $plan->planned_value);
 
-        return $percentage === null ? null : "{$percentage}% of the monthly target.";
+        return $percentage === null ? null : __(':percent% of the monthly target.', ['percent' => $percentage]);
     }
 }

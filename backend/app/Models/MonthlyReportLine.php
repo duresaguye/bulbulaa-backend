@@ -24,13 +24,13 @@ class MonthlyReportLine extends Model
                 || $monthlyPlan->annualTarget->fiscal_year !== $report->ethiopian_fiscal_year
                 || $monthlyPlan->ethiopian_month !== $report->ethiopian_month) {
                 throw ValidationException::withMessages([
-                    'monthly_plan_id' => 'The monthly target must belong to the report office and month.',
+                    'monthly_plan_id' => __('The monthly target must belong to the report office and month.'),
                 ]);
             }
 
             if (! $report->isEditable()) {
                 throw ValidationException::withMessages([
-                    'actual_value' => 'Results can only be changed while the report is a draft or returned for correction.',
+                    'actual_value' => __('Results can only be changed while the report is a draft or returned for correction.'),
                 ]);
             }
         });

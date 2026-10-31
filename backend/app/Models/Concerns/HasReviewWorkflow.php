@@ -28,7 +28,7 @@ trait HasReviewWorkflow
 
             if ($report->exists && $originalStatus === ReportStatus::Approved) {
                 throw ValidationException::withMessages([
-                    'status' => 'An approved report cannot be changed.',
+                    'status' => __('An approved report cannot be changed.'),
                 ]);
             }
         });
@@ -37,7 +37,7 @@ trait HasReviewWorkflow
             /** @var self $report */
             if (! $report->status->isEditable()) {
                 throw ValidationException::withMessages([
-                    'status' => 'Only draft or returned reports can be deleted.',
+                    'status' => __('Only draft or returned reports can be deleted.'),
                 ]);
             }
         });

@@ -12,8 +12,8 @@ class EvidenceUpload
     public static function make(string $directory): FileUpload
     {
         return FileUpload::make('evidence_paths')
-            ->label('Supporting evidence')
-            ->helperText('PDF, image, Word, or Excel files up to 10 MB each.')
+            ->label(__('Supporting evidence'))
+            ->helperText(__('PDF, image, Word, or Excel files up to 10 MB each.'))
             ->multiple()
             ->disk('local')
             ->directory("evidence/{$directory}")

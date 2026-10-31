@@ -7,6 +7,7 @@ use App\Filament\Resources\Permissions\Pages\EditPermission;
 use App\Filament\Resources\Permissions\Pages\ListPermissions;
 use App\Filament\Resources\Permissions\Schemas\PermissionForm;
 use App\Filament\Resources\Permissions\Tables\PermissionsTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Models\Permission;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -16,6 +17,8 @@ use Filament\Tables\Table;
 
 class PermissionResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = Permission::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

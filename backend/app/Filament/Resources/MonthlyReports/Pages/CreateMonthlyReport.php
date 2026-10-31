@@ -14,6 +14,6 @@ class CreateMonthlyReport extends CreateRecord
 
     public function getTitle(): string
     {
-        return 'New monthly report';
+        return __('New monthly report');
     }
 }

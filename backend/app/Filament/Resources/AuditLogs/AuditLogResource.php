@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AuditLogs;
 
 use App\Filament\Resources\AuditLogs\Pages\ListAuditLogs;
 use App\Filament\Resources\AuditLogs\Tables\AuditLogsTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Models\AuditLog;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -12,6 +13,8 @@ use Filament\Tables\Table;
 
 class AuditLogResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = AuditLog::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

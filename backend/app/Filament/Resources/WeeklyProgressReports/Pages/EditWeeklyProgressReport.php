@@ -14,7 +14,7 @@ class EditWeeklyProgressReport extends EditRecord
 
     public function getTitle(): string
     {
-        return 'Edit weekly report';
+        return __('Edit weekly report');
     }
 
     public function getSubheading(): string

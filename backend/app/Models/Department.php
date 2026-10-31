@@ -25,7 +25,7 @@ class Department extends Model
             if ($department->parent_id !== null && $department->exists
                 && in_array((int) $department->parent_id, [$department->id, ...self::descendantIdsOf([$department->id])], true)) {
                 throw ValidationException::withMessages([
-                    'parent_id' => 'An office cannot report to itself or to one of its own subordinate offices.',
+                    'parent_id' => __('An office cannot report to itself or to one of its own subordinate offices.'),
                 ]);
             }
         });

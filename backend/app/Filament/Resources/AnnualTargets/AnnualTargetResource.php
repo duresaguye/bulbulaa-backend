@@ -9,6 +9,7 @@ use App\Filament\Resources\AnnualTargets\Pages\ListAnnualTargets;
 use App\Filament\Resources\AnnualTargets\Pages\ViewAnnualTarget;
 use App\Filament\Resources\AnnualTargets\Schemas\AnnualTargetForm;
 use App\Filament\Resources\AnnualTargets\Tables\AnnualTargetsTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Filament\Support\OfficeScope;
 use App\Models\AnnualTarget;
 use App\Services\TargetAssignment;
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AnnualTargetResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = AnnualTarget::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

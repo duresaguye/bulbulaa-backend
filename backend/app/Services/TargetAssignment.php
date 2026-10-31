@@ -72,7 +72,7 @@ class TargetAssignment
     public function distribute(User $user, AnnualTarget $target, array $shares): void
     {
         if (! $this->canDistribute($user, $target)) {
-            throw new AuthorizationException('You are not allowed to distribute this target.');
+            throw new AuthorizationException(__('You are not allowed to distribute this target.'));
         }
 
         $allowed = $this->distributionOptions($user, $target);
@@ -83,7 +83,7 @@ class TargetAssignment
 
                 if (! array_key_exists($departmentId, $allowed)) {
                     throw ValidationException::withMessages([
-                        'department_id' => 'Targets can only be distributed to subordinate offices that do not already hold a share.',
+                        'department_id' => __('Targets can only be distributed to subordinate offices that do not already hold a share.'),
                     ]);
                 }
 
@@ -106,12 +106,12 @@ class TargetAssignment
     public function revise(User $user, AnnualTarget $target, float $newValue, string $reason): void
     {
         if (! $this->canEdit($user, $target)) {
-            throw new AuthorizationException('You are not allowed to revise this target.');
+            throw new AuthorizationException(__('You are not allowed to revise this target.'));
         }
 
         if (blank($reason)) {
             throw ValidationException::withMessages([
-                'revision_reason' => 'Give the reason for revising the assigned target.',
+                'revision_reason' => __('Give the reason for revising the assigned target.'),
             ]);
         }
 
@@ -138,7 +138,7 @@ class TargetAssignment
     public function allocate(User $user, AnnualTarget $target, array $months): void
     {
         if (! $this->canAllocate($user, $target)) {
-            throw new AuthorizationException('Only the office responsible for this target can allocate it across months.');
+            throw new AuthorizationException(__('Only the office responsible for this target can allocate it across months.'));
         }
 
         DB::transaction(function () use ($target, $months): void {
@@ -155,7 +155,7 @@ class TargetAssignment
 
                     if ($plan->weeklyProgressEntries()->exists() || $plan->monthlyReportLines()->exists()) {
                         throw ValidationException::withMessages([
-                            "months.{$month}.planned_value" => "{$name} already has reported progress, so its target cannot be removed.",
+                            "months.{$month}.planned_value" => __(':month already has reported progress, so its target cannot be removed.', ['month' => __($name)]),
                         ]);
                     }
 

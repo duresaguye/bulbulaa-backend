@@ -94,7 +94,17 @@ class EthiopianCalendar
 
     public static function monthName(int $month): string
     {
-        return MonthlyPlan::ETHIOPIAN_MONTHS[$month];
+        return __(MonthlyPlan::ETHIOPIAN_MONTHS[$month]);
+    }
+
+    /**
+     * Month numbers to names in the current language, for select inputs and filters.
+     *
+     * @return array<int, string>
+     */
+    public static function monthOptions(): array
+    {
+        return array_map(fn (string $name): string => __($name), MonthlyPlan::ETHIOPIAN_MONTHS);
     }
 
     /**

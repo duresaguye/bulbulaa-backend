@@ -17,16 +17,16 @@ class UsersTable
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->searchable(),
                 TextColumn::make('roles.label')
-                    ->label('Roles')
+                    ->label(__('Roles'))
                     ->badge()
                     ->color('gray'),
                 TextColumn::make('departments.name')
-                    ->label('Offices')
+                    ->label(__('Offices'))
                     ->listWithLineBreaks()
-                    ->placeholder('No office'),
+                    ->placeholder(__('No office')),
                 TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable()

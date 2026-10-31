@@ -13,7 +13,7 @@ class CreateAnnualTarget extends CreateRecord
 
     public function getTitle(): string
     {
-        return 'Assign annual target';
+        return __('Assign annual target');
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
@@ -26,7 +26,7 @@ class CreateAnnualTarget extends CreateRecord
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return 'Target assigned';
+        return __('Target assigned');
     }
 
     protected function getRedirectUrl(): string

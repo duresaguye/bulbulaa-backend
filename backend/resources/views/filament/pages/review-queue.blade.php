@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <x-filament::tabs label="Report type">
+    <x-filament::tabs :label="__('Report type')">
         @foreach ($this->tabs() as $key => $tab)
             <x-filament::tabs.item
                 :active="$this->type === $key"

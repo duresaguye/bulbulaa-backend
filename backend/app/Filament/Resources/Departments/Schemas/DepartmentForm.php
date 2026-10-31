@@ -24,8 +24,8 @@ class DepartmentForm
                     ->maxLength(32)
                     ->unique(ignoreRecord: true),
                 Select::make('parent_id')
-                    ->label('Reports to')
-                    ->helperText('The supervising office that distributes targets to this office and reviews its reports. Leave empty for the top of the organisation.')
+                    ->label(__('Reports to'))
+                    ->helperText(__('The supervising office that distributes targets to this office and reviews its reports. Leave empty for the top of the organisation.'))
                     ->options(fn (?Department $record): array => Department::query()
                         ->when($record, fn ($query) => $query->whereNotIn('id', [$record->id, ...Department::descendantIdsOf([$record->id])]))
                         ->orderBy('name')
@@ -36,7 +36,7 @@ class DepartmentForm
                 Textarea::make('description')
                     ->columnSpanFull(),
                 Toggle::make('is_active')
-                    ->label('Active')
+                    ->label(__('Active'))
                     ->default(true)
                     ->required(),
             ]);

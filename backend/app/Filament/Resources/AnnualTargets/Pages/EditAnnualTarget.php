@@ -18,7 +18,7 @@ class EditAnnualTarget extends EditRecord
 
     public function getTitle(): string
     {
-        return 'Edit target';
+        return __('Edit target');
     }
 
     protected function getHeaderActions(): array

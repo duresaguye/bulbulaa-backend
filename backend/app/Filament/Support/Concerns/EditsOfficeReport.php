@@ -24,7 +24,7 @@ trait EditsOfficeReport
     {
         return [
             ViewAction::make(),
-            DeleteAction::make()->label('Delete draft'),
+            DeleteAction::make()->label(__('Delete draft')),
         ];
     }
 
@@ -32,18 +32,18 @@ trait EditsOfficeReport
     {
         return [
             $this->getSaveFormAction()
-                ->label('Save draft')
+                ->label(__('Save draft'))
                 ->color('gray'),
             Action::make('saveAndSubmit')
-                ->label(fn (): string => $this->getRecord()->status->value === 'returned' ? 'Save and resubmit' : 'Save and submit for review')
+                ->label(fn (): string => $this->getRecord()->status->value === 'returned' ? __('Save and resubmit') : __('Save and submit for review'))
                 ->icon(Heroicon::OutlinedPaperAirplane)
                 ->visible(fn (): bool => OfficeScope::user() !== null
                     && app(ReportWorkflow::class)->canSubmit(OfficeScope::user(), $this->getRecord()))
                 ->requiresConfirmation()
-                ->modalHeading('Submit this report?')
-                ->modalDescription(fn (): string => 'Your changes will be saved and the report sent for review. '
+                ->modalHeading(__('Submit this report?'))
+                ->modalDescription(fn (): string => __('Your changes will be saved and the report sent for review. ')
                     .ReportWorkflow::reviewerDescription($this->getRecord()->department))
-                ->modalSubmitActionLabel('Submit for review')
+                ->modalSubmitActionLabel(__('Submit for review'))
                 ->action(function (): void {
                     $this->submitAfterSaving = true;
                     $this->save();
@@ -81,7 +81,7 @@ trait EditsOfficeReport
 
         return Notification::make()
             ->success()
-            ->title($this->submitAfterSaving ? 'Report submitted' : 'Draft saved')
+            ->title($this->submitAfterSaving ? __('Report submitted') : __('Draft saved'))
             ->body($this->submitAfterSaving ? ReportWorkflow::reviewerDescription($record->department) : null);
     }
 

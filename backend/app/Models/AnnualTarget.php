@@ -36,19 +36,19 @@ class AnnualTarget extends Model
         static::updating(function (self $target): void {
             if ($target->isDirty('original_target_value')) {
                 throw ValidationException::withMessages([
-                    'target_value' => 'The originally assigned target value cannot be changed.',
+                    'target_value' => __('The originally assigned target value cannot be changed.'),
                 ]);
             }
 
             if ($target->isDirty('target_value') && ! $target->revisionRecorded) {
                 throw ValidationException::withMessages([
-                    'target_value' => 'An assigned target can only change through a recorded revision with a reason.',
+                    'target_value' => __('An assigned target can only change through a recorded revision with a reason.'),
                 ]);
             }
 
             if ($target->isDirty(['department_id', 'fiscal_year', 'aggregation']) && $target->hasReportedProgress()) {
                 throw ValidationException::withMessages([
-                    'department_id' => 'The office, year, and indicator type cannot change after progress has been reported.',
+                    'department_id' => __('The office, year, and indicator type cannot change after progress has been reported.'),
                 ]);
             }
         });

@@ -3,17 +3,17 @@
 @endphp
 
 @if (count($results) === 0)
-    <p class="rt-muted">No annual targets are assigned to this office for the selected year.</p>
+    <p class="rt-muted">{{ __('No annual targets are assigned to this office for the selected year.') }}</p>
 @else
     <div class="rt-table-wrap">
         <table class="rt-table rt-table--cards">
             <thead>
                 <tr>
-                    <th scope="col">Target</th>
-                    <th scope="col" class="rt-num">Originally assigned</th>
-                    <th scope="col" class="rt-num">Current target</th>
-                    <th scope="col" class="rt-num">Approved result</th>
-                    <th scope="col" class="rt-num">Achievement</th>
+                    <th scope="col">{{ __('Target') }}</th>
+                    <th scope="col" class="rt-num">{{ __('Originally assigned') }}</th>
+                    <th scope="col" class="rt-num">{{ __('Current target') }}</th>
+                    <th scope="col" class="rt-num">{{ __('Approved result') }}</th>
+                    <th scope="col" class="rt-num">{{ __('Achievement') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,15 +23,15 @@
                             <span class="rt-strong">{{ $row['title'] }}</span>
                             <span class="rt-muted rt-block">{{ $row['unit'] }}, {{ \App\Enums\Aggregation::from($row['aggregation'])->getLabel() }}</span>
                         </td>
-                        <td class="rt-num" data-label="Originally assigned">{{ $format($row['original_target']) }}</td>
-                        <td class="rt-num" data-label="Current target">
+                        <td class="rt-num" data-label="{{ __('Originally assigned') }}">{{ $format($row['original_target']) }}</td>
+                        <td class="rt-num" data-label="{{ __('Current target') }}">
                             {{ $format($row['current_target']) }}
                             @if ($row['current_target'] != $row['original_target'])
-                                <span class="rt-muted rt-block">Revised</span>
+                                <span class="rt-muted rt-block">{{ __('Revised') }}</span>
                             @endif
                         </td>
-                        <td class="rt-num" data-label="Approved result">{{ $format($row['actual']) }}</td>
-                        <td class="rt-num" data-label="Achievement">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
+                        <td class="rt-num" data-label="{{ __('Approved result') }}">{{ $format($row['actual']) }}</td>
+                        <td class="rt-num" data-label="{{ __('Achievement') }}">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
                     </tr>
                 @endforeach
             </tbody>

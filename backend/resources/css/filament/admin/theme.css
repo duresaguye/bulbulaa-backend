@@ -257,6 +257,27 @@
         box-shadow: none;
     }
 
+    .rt-language-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.25rem 1rem;
+        border-top: 1px solid var(--rt-rule);
+        padding-top: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .rt-language-links a {
+        color: var(--rt-accent);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .rt-language-links [aria-current] {
+        color: var(--rt-ink);
+        font-weight: 600;
+    }
+
     .rt-login-note {
         margin-bottom: 0.5rem;
         color: var(--rt-muted);

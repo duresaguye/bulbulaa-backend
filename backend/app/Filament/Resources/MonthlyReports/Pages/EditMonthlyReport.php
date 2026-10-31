@@ -14,7 +14,7 @@ class EditMonthlyReport extends EditRecord
 
     public function getTitle(): string
     {
-        return 'Edit monthly report';
+        return __('Edit monthly report');
     }
 
     public function getSubheading(): string

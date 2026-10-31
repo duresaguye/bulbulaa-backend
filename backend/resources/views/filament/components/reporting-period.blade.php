@@ -4,12 +4,12 @@
     $office = $user instanceof \App\Models\User ? $user->primaryDepartment() : null;
 @endphp
 
-<div class="rt-period" aria-label="Today in the Ethiopian calendar">
+<div class="rt-period" aria-label="{{ __('Today in the Ethiopian calendar') }}">
     <span class="rt-period__date">
         <span class="rt-period__day">{{ $today['day'] }}</span>
         <span class="rt-period__month">
             {{ \App\Services\EthiopianCalendar::monthName($today['month']) }} {{ $today['year'] }}
-            <span class="rt-period__week">Week {{ $today['week'] }}</span>
+            <span class="rt-period__week">{{ __('Week :week', ['week' => $today['week']]) }}</span>
         </span>
     </span>
     @if ($office)

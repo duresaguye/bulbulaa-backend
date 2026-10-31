@@ -9,7 +9,7 @@
 
 <x-filament-panels::page>
     <div class="rt-stack">
-        <section class="rt-status rt-status--{{ $status->getColor() }}" aria-label="Report status">
+        <section class="rt-status rt-status--{{ $status->getColor() }}" aria-label="{{ __('Report status') }}">
             <div class="rt-status__main">
                 <x-filament::badge :color="$status->getColor()" size="lg">{{ $status->getLabel() }}</x-filament::badge>
                 <p class="rt-status__next">{{ $this->nextStep() }}</p>
@@ -17,20 +17,20 @@
             @if ($latestReturn)
                 <blockquote class="rt-status__comment">
                     <p>{{ $latestReturn->comment }}</p>
-                    <footer>{{ $latestReturn->user?->name ?? 'Reviewer' }}, {{ $latestReturn->created_at->format('j M Y, H:i') }}</footer>
+                    <footer>{{ $latestReturn->user?->name ?? __('Reviewer') }}, {{ $latestReturn->created_at->format('j M Y, H:i') }}</footer>
                 </blockquote>
             @endif
             <dl class="rt-meta">
-                <div><dt>Office</dt><dd>{{ $record->department->name }}</dd></div>
-                <div><dt>Period</dt><dd>{{ $record->periodLabel() }}</dd></div>
-                <div><dt>Prepared by</dt><dd>{{ $record->preparedBy?->name ?? '—' }}</dd></div>
+                <div><dt>{{ __('Office') }}</dt><dd>{{ $record->department->name }}</dd></div>
+                <div><dt>{{ __('Period') }}</dt><dd>{{ $record->periodLabel() }}</dd></div>
+                <div><dt>{{ __('Prepared by') }}</dt><dd>{{ $record->preparedBy?->name ?? '—' }}</dd></div>
                 <div>
-                    <dt>Submitted</dt>
+                    <dt>{{ __('Submitted') }}</dt>
                     <dd>
                         @if ($record->submitted_at)
                             {{ $record->submittedBy?->name }}, {{ $record->submitted_at->format('j M Y, H:i') }}
                         @else
-                            Not yet
+                            {{ __('Not yet') }}
                         @endif
                     </dd>
                 </div>
@@ -40,16 +40,16 @@
         @if ($results)
             <x-filament::section :heading="$results['heading']">
                 @if (count($results['rows']) === 0)
-                    <p class="rt-muted">No results recorded.</p>
+                    <p class="rt-muted">{{ __('No results recorded.') }}</p>
                 @else
                     <div class="rt-table-wrap">
                         <table class="rt-table rt-table--cards">
                             <thead>
                                 <tr>
-                                    <th scope="col">Target</th>
+                                    <th scope="col">{{ __('Target') }}</th>
                                     <th scope="col" class="rt-num">{{ $results['target_label'] }}</th>
                                     <th scope="col" class="rt-num">{{ $results['actual_label'] }}</th>
-                                    <th scope="col" class="rt-num">Achievement</th>
+                                    <th scope="col" class="rt-num">{{ __('Achievement') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,7 +64,7 @@
                                         </td>
                                         <td class="rt-num" data-label="{{ $results['target_label'] }}">{{ $row['target'] }}</td>
                                         <td class="rt-num" data-label="{{ $results['actual_label'] }}">{{ $row['actual'] }}</td>
-                                        <td class="rt-num" data-label="Achievement">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
+                                        <td class="rt-num" data-label="{{ __('Achievement') }}">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -74,16 +74,16 @@
             </x-filament::section>
         @endif
 
-        <x-filament::section heading="Report">
+        <x-filament::section :heading="__('Report')">
             <dl class="rt-narrative">
                 @foreach ($this->narrative() as $item)
                     <div>
                         <dt>{{ $item['label'] }}</dt>
-                        <dd>{!! filled($item['value']) ? nl2br(e($item['value'])) : '<span class="rt-muted">Not provided</span>' !!}</dd>
+                        <dd>{!! filled($item['value']) ? nl2br(e($item['value'])) : '<span class="rt-muted">'.e(__('Not provided')).'</span>' !!}</dd>
                     </div>
                 @endforeach
                 <div>
-                    <dt>Supporting evidence</dt>
+                    <dt>{{ __('Supporting evidence') }}</dt>
                     <dd>
                         @forelse ($evidence as $file)
                             @if ($file['url'])
@@ -92,22 +92,22 @@
                                 <span class="rt-block rt-muted">{{ $file['name'] }} (file missing)</span>
                             @endif
                         @empty
-                            <span class="rt-muted">None attached</span>
+                            <span class="rt-muted">{{ __('None attached') }}</span>
                         @endforelse
                     </dd>
                 </div>
             </dl>
         </x-filament::section>
 
-        <x-filament::section heading="Review history">
+        <x-filament::section :heading="__('Review history')">
             @if ($reviews->isEmpty())
-                <p class="rt-muted">No submissions or decisions yet.</p>
+                <p class="rt-muted">{{ __('No submissions or decisions yet.') }}</p>
             @else
                 <ol class="rt-timeline">
                     @foreach ($reviews as $review)
                         <li>
                             <x-filament::badge :color="$review->action->getColor()">{{ $review->action->getLabel() }}</x-filament::badge>
-                            <span>{{ $review->user?->name ?? 'Unknown user' }}</span>
+                            <span>{{ $review->user?->name ?? __('Unknown user') }}</span>
                             <time class="rt-muted" datetime="{{ $review->created_at->toIso8601String() }}">{{ $review->created_at->format('j M Y, H:i') }}</time>
                             @if (filled($review->comment))
                                 <p class="rt-timeline__comment">{{ $review->comment }}</p>

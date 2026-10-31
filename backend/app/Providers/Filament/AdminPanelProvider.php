@@ -4,6 +4,10 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
 use App\Filament\Support\InitialsAvatarProvider;
+use App\Http\Controllers\ReportExportController;
+use App\Http\Middleware\SetLocale;
+use App\Support\Locales;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -18,6 +22,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -33,6 +38,11 @@ class AdminPanelProvider extends PanelProvider
                 PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
                 fn (): string => view('filament.components.login-introduction')->render(),
             )
+            ->renderHook(
+                PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): string => view('filament.components.language-links')->render(),
+            )
+            ->userMenuItems(self::languageMenuItems())
             ->renderHook(
                 PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn (): string => view('filament.components.reporting-period')->render(),
@@ -68,11 +78,11 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarWidth('16rem')
             ->maxContentWidth('7xl')
             ->navigationGroups([
-                NavigationGroup::make('Planning'),
-                NavigationGroup::make('Reports'),
-                NavigationGroup::make('Oversight'),
-                NavigationGroup::make('Organization'),
-                NavigationGroup::make('Administration')->collapsed(),
+                NavigationGroup::make(fn (): string => __('Planning')),
+                NavigationGroup::make(fn (): string => __('Reports')),
+                NavigationGroup::make(fn (): string => __('Oversight')),
+                NavigationGroup::make(fn (): string => __('Organization')),
+                NavigationGroup::make(fn (): string => __('Administration'))->collapsed(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -91,8 +101,31 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->middleware([SetLocale::class], isPersistent: true)
+            ->authenticatedRoutes(function (): void {
+                Route::get('exports/office-performance/print', [ReportExportController::class, 'printOfficePerformance'])->name('exports.office-performance.print');
+                Route::get('exports/office-performance/excel', [ReportExportController::class, 'excelOfficePerformance'])->name('exports.office-performance.excel');
+                Route::get('exports/{type}/{record}/print', [ReportExportController::class, 'printReport'])->whereIn('type', ['weekly', 'monthly', 'annual'])->whereNumber('record')->name('exports.report.print');
+                Route::get('exports/{type}/{record}/excel', [ReportExportController::class, 'excelReport'])->whereIn('type', ['weekly', 'monthly', 'annual'])->whereNumber('record')->name('exports.report.excel');
+            })
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    /**
+     * One user-menu entry per language, each named in its own language, with a tick on the one in use.
+     *
+     * @return list<Action>
+     */
+    private static function languageMenuItems(): array
+    {
+        return collect(Locales::NAMES)
+            ->map(fn (string $name, string $code): Action => Action::make('language_'.$code)
+                ->label($name)
+                ->icon(fn (): string => app()->getLocale() === $code ? 'heroicon-m-check' : 'heroicon-o-language')
+                ->url(fn (): string => route('admin.language', $code)))
+            ->values()
+            ->all();
     }
 }

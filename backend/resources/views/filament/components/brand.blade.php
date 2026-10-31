@@ -1,5 +1,5 @@
 @php($town = config('app.town_name'))
-<div class="rt-brand" aria-label="{{ $town }} administration">
+<div class="rt-brand" aria-label="{{ __(':town administration', ['town' => $town]) }}">
     <svg class="rt-brand__mark" viewBox="0 0 32 32" aria-hidden="true">
         <rect x="1" y="1" width="30" height="30" rx="7" fill="currentColor" />
         {{-- A town hall on rising ground: the administration, and the land it serves. --}}
@@ -8,6 +8,6 @@
     </svg>
     <span class="rt-brand__copy">
         <span class="rt-brand__name">{{ $town }}</span>
-        <span class="rt-brand__tagline">Planning and reporting</span>
+        <span class="rt-brand__tagline">{{ __('Planning and reporting') }}</span>
     </span>
 </div>

@@ -19,13 +19,13 @@
 <x-filament-panels::page>
     @if ($mode === 'none')
         <x-filament::section>
-            <p>Your account has no planning or reporting responsibilities. Use the menu for the tasks you are allowed to do, or ask an administrator to assign you to an office.</p>
+            <p>{{ __('Your account has no planning or reporting responsibilities. Use the menu for the tasks you are allowed to do, or ask an administrator to assign you to an office.') }}</p>
         </x-filament::section>
     @else
         <div class="rt-stack">
             <div class="rt-toolbar">
                 <label class="rt-select">
-                    <span>Year (E.C.)</span>
+                    <span>{{ __('Year (E.C.)') }}</span>
                     <select wire:model.live="year">
                         @foreach ($this->yearOptions() as $value => $label)
                             <option value="{{ $value }}">{{ $label }}</option>
@@ -34,22 +34,22 @@
                 </label>
                 @if ($oversight && count($this->unitOptions()) > 0)
                     <label class="rt-select">
-                        <span>Department</span>
+                        <span>{{ __('Department') }}</span>
                         <select wire:model.live="unit">
-                            <option value="">All offices</option>
+                            <option value="">{{ __('All offices') }}</option>
                             @foreach ($this->unitOptions() as $value => $label)
-                                <option value="{{ $value }}">{{ $label }} and offices below</option>
+                                <option value="{{ $value }}">{{ __(':office and offices below', ['office' => $label]) }}</option>
                             @endforeach
                         </select>
                     </label>
                 @endif
-                <span wire:loading class="rt-muted rt-small">Updating…</span>
+                <span wire:loading class="rt-muted rt-small">{{ __('Updating…') }}</span>
             </div>
 
             <section class="rt-actions" aria-labelledby="rt-actions-heading">
-                <h2 id="rt-actions-heading" class="rt-h2">What needs doing</h2>
+                <h2 id="rt-actions-heading" class="rt-h2">{{ __('What needs doing') }}</h2>
                 @if (count($actions) === 0)
-                    <p class="rt-muted">Nothing is due from you right now.</p>
+                    <p class="rt-muted">{{ __('Nothing is due from you right now.') }}</p>
                 @else
                     <ul class="rt-actions__list">
                         @foreach ($actions as $action)
@@ -90,32 +90,32 @@
                     @endforeach
                 </dl>
 
-                <x-filament::section heading="Offices needing attention">
+                <x-filament::section :heading="__('Offices needing attention')">
                     <x-slot name="afterHeader">
                         <x-filament::link :href="\App\Filament\Pages\OfficePerformance::getUrl(['year' => $this->year])" size="sm">
-                            All offices
+                            {{ __('All offices') }}
                         </x-filament::link>
                     </x-slot>
                     @php($attention = $this->officesNeedingAttention())
                     @if ($attention->isEmpty())
-                        <p class="rt-muted">No office is behind plan or overdue with reports.</p>
+                        <p class="rt-muted">{{ __('No office is behind plan or overdue with reports.') }}</p>
                     @else
                         @include('filament.partials.office-table', ['rows' => $attention, 'compact' => true])
                     @endif
                 </x-filament::section>
 
                 <div class="rt-columns">
-                    <x-filament::section heading="Targets behind plan">
+                    <x-filament::section :heading="__('Targets behind plan')">
                         @php($atRisk = $this->targetsAtRisk())
                         @if ($atRisk->isEmpty())
-                            <p class="rt-muted">No target is below its expected pace.</p>
+                            <p class="rt-muted">{{ __('No target is below its expected pace.') }}</p>
                         @else
                             <ul class="rt-target-list">
                                 @foreach ($atRisk as $item)
                                     <li>
                                         <a class="rt-link rt-strong" href="{{ \App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('view', ['record' => $item['target']]) }}">{{ $item['target']->title }}</a>
                                         <span class="rt-muted rt-small rt-block">
-                                            {{ $item['office']->name }}. {{ $item['target']->formatValue($item['summary']['actual'] ?? 0) }} of {{ $item['target']->formatValue($item['summary']['expected']) }} expected by now.
+                                            {{ __(':office. :actual of :expected expected by now.', ['office' => $item['office']->name, 'actual' => $item['target']->formatValue($item['summary']['actual'] ?? 0), 'expected' => $item['target']->formatValue($item['summary']['expected'])]) }}
                                         </span>
                                         <x-rt.pace-bar :summary="$item['summary']" :label="$item['target']->title" />
                                     </li>
@@ -124,10 +124,10 @@
                         @endif
                     </x-filament::section>
 
-                    <x-filament::section heading="Recent submissions and decisions">
+                    <x-filament::section :heading="__('Recent submissions and decisions')">
                         @php($activity = $this->recentActivity())
                         @if ($activity->isEmpty())
-                            <p class="rt-muted">No reports have been submitted yet.</p>
+                            <p class="rt-muted">{{ __('No reports have been submitted yet.') }}</p>
                         @else
                             <ol class="rt-timeline rt-timeline--compact">
                                 @foreach ($activity as $review)
@@ -139,7 +139,7 @@
                                             @else
                                                 <span>{{ $this::reviewableLabel($review) }}</span>
                                             @endif
-                                            <span class="rt-muted rt-small rt-block">{{ $review->action->getLabel() }} by {{ $review->user?->name }}, {{ $review->created_at->diffForHumans() }}</span>
+                                            <span class="rt-muted rt-small rt-block">{{ __(':action by :person, :when', ['action' => $review->action->getLabel(), 'person' => $review->user?->name ?? __('Unknown user'), 'when' => $review->created_at->diffForHumans()]) }}</span>
                                         </div>
                                     </li>
                                 @endforeach
@@ -151,20 +151,20 @@
 
             @php($targets = $this->myOffices()->isNotEmpty() ? $this->myTargets() : collect())
             @if ($this->myOffices()->isNotEmpty() && ($targets->isNotEmpty() || ! $oversight))
-                <x-filament::section :heading="$this->myOffices()->count() === 1 ? $this->myOffices()->first()->name.': targets for '.$this->year : 'Your offices\' targets for '.$this->year">
+                <x-filament::section :heading="$this->myOffices()->count() === 1 ? __(':office: targets for :year', ['office' => $this->myOffices()->first()->name, 'year' => $this->year]) : __('Your offices\' targets for :year', ['year' => $this->year])">
                     @if ($targets->isEmpty())
-                        <p class="rt-muted">No annual targets are assigned to your office for {{ $this->year }}.</p>
+                        <p class="rt-muted">{{ __('No annual targets are assigned to your office for :year.', ['year' => $this->year]) }}</p>
                     @else
                         <div class="rt-table-wrap">
                             <table class="rt-table rt-table--cards">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Target</th>
-                                        <th scope="col" class="rt-num">This month</th>
-                                        <th scope="col" class="rt-num">Annual target</th>
-                                        <th scope="col" class="rt-num">Achieved so far</th>
-                                        <th scope="col">Progress</th>
-                                        <th scope="col">Pace</th>
+                                        <th scope="col">{{ __('Target') }}</th>
+                                        <th scope="col" class="rt-num">{{ __('This month') }}</th>
+                                        <th scope="col" class="rt-num">{{ __('Annual target') }}</th>
+                                        <th scope="col" class="rt-num">{{ __('Achieved so far') }}</th>
+                                        <th scope="col">{{ __('Progress') }}</th>
+                                        <th scope="col">{{ __('Pace') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -175,21 +175,21 @@
                                                 <a class="rt-link rt-strong" href="{{ \App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('view', ['record' => $target]) }}">{{ $target->title }}</a>
                                                 <span class="rt-muted rt-block rt-small">{{ $target->measurement_unit }}@if ($this->myOffices()->count() > 1), {{ $target->department->name }}@endif</span>
                                             </td>
-                                            <td class="rt-num" data-label="This month">
+                                            <td class="rt-num" data-label="{{ __('This month') }}">
                                                 @if ($item['month_target'] === null)
                                                     <span class="rt-muted">—</span>
                                                 @else
-                                                    {{ $target->formatValue($item['month_actual'] ?? 0) }} of {{ $target->formatValue($item['month_target']) }}
+                                                    {{ __(':actual of :target', ['actual' => $target->formatValue($item['month_actual'] ?? 0), 'target' => $target->formatValue($item['month_target'])]) }}
                                                     <span class="rt-muted rt-block rt-small">{{ ($pct = TargetProgress::achievement($item['month_actual'] ?? 0, $item['month_target'])) === null ? '' : $pct.'%' }}</span>
                                                 @endif
                                             </td>
-                                            <td class="rt-num" data-label="Annual target">{{ $target->formatValue($target->target_value) }}</td>
-                                            <td class="rt-num" data-label="Achieved so far">
+                                            <td class="rt-num" data-label="{{ __('Annual target') }}">{{ $target->formatValue($target->target_value) }}</td>
+                                            <td class="rt-num" data-label="{{ __('Achieved so far') }}">
                                                 {{ $target->formatValue($item['summary']['actual']) }}
                                                 <span class="rt-muted rt-block rt-small">{{ $item['summary']['achievement'] === null ? '' : $item['summary']['achievement'].'%' }}</span>
                                             </td>
-                                            <td class="rt-cell-bar" data-label="Progress"><x-rt.pace-bar :summary="$item['summary']" :label="$target->title" /></td>
-                                            <td data-label="Pace">
+                                            <td class="rt-cell-bar" data-label="{{ __('Progress') }}"><x-rt.pace-bar :summary="$item['summary']" :label="$target->title" /></td>
+                                            <td data-label="{{ __('Pace') }}">
                                                 <x-filament::badge :color="TargetProgress::paceColor($item['summary']['status'])">{{ TargetProgress::paceLabel($item['summary']['status']) }}</x-filament::badge>
                                             </td>
                                         </tr>
@@ -198,8 +198,8 @@
                             </table>
                         </div>
                         <p class="rt-muted rt-small rt-legend">
-                            <span class="rt-legend__fill" aria-hidden="true"></span> Achieved
-                            <span class="rt-legend__tick" aria-hidden="true"></span> Expected by the end of last month
+                            <span class="rt-legend__fill" aria-hidden="true"></span> {{ __('Achieved') }}
+                            <span class="rt-legend__tick" aria-hidden="true"></span> {{ __('Expected by the end of last month') }}
                         </p>
                     @endif
                 </x-filament::section>
@@ -207,7 +207,7 @@
                 @if (! $oversight)
                     @php($feedback = $this->recentFeedback())
                     @if ($feedback->isNotEmpty())
-                        <x-filament::section heading="Recent feedback from reviewers">
+                        <x-filament::section :heading="__('Recent feedback from reviewers')">
                             <ol class="rt-timeline">
                                 @foreach ($feedback as $review)
                                     <li>

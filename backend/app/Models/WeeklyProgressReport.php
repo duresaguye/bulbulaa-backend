@@ -29,7 +29,7 @@ class WeeklyProgressReport extends Model
                 && $report->isDirty(['department_id', 'ethiopian_fiscal_year', 'ethiopian_month'])
                 && $report->entries()->exists()) {
                 throw ValidationException::withMessages([
-                    'department_id' => 'A report period cannot be changed after progress entries have been added.',
+                    'department_id' => __('A report period cannot be changed after progress entries have been added.'),
                 ]);
             }
         });
@@ -42,7 +42,7 @@ class WeeklyProgressReport extends Model
 
     public function periodLabel(): string
     {
-        return EthiopianCalendar::monthName($this->ethiopian_month).' '.$this->ethiopian_fiscal_year.', week '.$this->week_number;
+        return __(':month :year, week :week', ['month' => EthiopianCalendar::monthName($this->ethiopian_month), 'year' => $this->ethiopian_fiscal_year, 'week' => $this->week_number]);
     }
 
     protected function casts(): array

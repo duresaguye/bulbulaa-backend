@@ -30,12 +30,12 @@ class ReportWorkflow
     public function submit(User $user, WeeklyProgressReport|MonthlyReport|AnnualReport $report): void
     {
         if (! $this->canSubmit($user, $report)) {
-            throw new AuthorizationException('You are not allowed to submit this report.');
+            throw new AuthorizationException(__('You are not allowed to submit this report.'));
         }
 
         if ($report instanceof WeeklyProgressReport && ! $report->entries()->exists()) {
             throw ValidationException::withMessages([
-                'entries' => 'Record progress against at least one monthly target before submitting.',
+                'entries' => __('Record progress against at least one monthly target before submitting.'),
             ]);
         }
 
@@ -78,7 +78,7 @@ class ReportWorkflow
 
         if (blank($comment)) {
             throw ValidationException::withMessages([
-                'comment' => 'Explain what needs to be corrected so the office can fix it.',
+                'comment' => __('Explain what needs to be corrected so the office can fix it.'),
             ]);
         }
 
@@ -100,8 +100,8 @@ class ReportWorkflow
     public static function reviewerDescription(Department $department): string
     {
         return $department->parent !== null
-            ? "{$department->parent->name} will review it."
-            : 'The city administration will review it.';
+            ? __(':office will review it.', ['office' => $department->parent->name])
+            : __('The city administration will review it.');
     }
 
     /**
@@ -138,12 +138,12 @@ class ReportWorkflow
     {
         if ($report->status !== ReportStatus::Submitted) {
             throw ValidationException::withMessages([
-                'status' => 'Only reports awaiting review can be approved or returned.',
+                'status' => __('Only reports awaiting review can be approved or returned.'),
             ]);
         }
 
         if (! $user->canReview($report)) {
-            throw new AuthorizationException('You are not allowed to review this report.');
+            throw new AuthorizationException(__('You are not allowed to review this report.'));
         }
     }
 }

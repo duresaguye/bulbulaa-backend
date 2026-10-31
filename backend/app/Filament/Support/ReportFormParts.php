@@ -13,7 +13,7 @@ class ReportFormParts
      */
     public static function returnedCallout(): Callout
     {
-        return Callout::make('Returned for correction')
+        return Callout::make(__('Returned for correction'))
             ->description(function (?Model $record): string {
                 $review = $record?->latestReturn;
 
@@ -21,7 +21,7 @@ class ReportFormParts
                     return '';
                 }
 
-                return trim(($review->user?->name ?? 'The reviewer').' on '.$review->created_at->format('j M Y').': '.$review->comment);
+                return trim(($review->user?->name ?? __('The reviewer')).' on '.$review->created_at->format('j M Y').': '.$review->comment);
             })
             ->danger()
             ->visible(fn (?Model $record): bool => $record?->status === ReportStatus::Returned)

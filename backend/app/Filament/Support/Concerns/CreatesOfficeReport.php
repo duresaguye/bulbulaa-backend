@@ -27,16 +27,16 @@ trait CreatesOfficeReport
     {
         return [
             $this->getCreateFormAction()
-                ->label('Save draft')
+                ->label(__('Save draft'))
                 ->color('gray'),
             Action::make('createAndSubmit')
-                ->label('Save and submit for review')
+                ->label(__('Save and submit for review'))
                 ->icon(Heroicon::OutlinedPaperAirplane)
                 ->visible(fn (): bool => OfficeScope::user()?->hasPermission('reports.submit') ?? false)
                 ->requiresConfirmation()
-                ->modalHeading('Submit this report?')
-                ->modalDescription('The report will be saved and sent to the supervising office for review. You cannot edit it afterwards unless it is returned for correction.')
-                ->modalSubmitActionLabel('Submit for review')
+                ->modalHeading(__('Submit this report?'))
+                ->modalDescription(__('The report will be saved and sent to the supervising office for review. You cannot edit it afterwards unless it is returned for correction.'))
+                ->modalSubmitActionLabel(__('Submit for review'))
                 ->action(function (): void {
                     $this->submitAfterSaving = true;
                     $this->create();
@@ -66,8 +66,8 @@ trait CreatesOfficeReport
         if (! $workflow->canSubmit(OfficeScope::user(), $record)) {
             Notification::make()
                 ->warning()
-                ->title('Saved as a draft')
-                ->body("Only staff of {$record->department->name} who are allowed to submit reports can send it for review.")
+                ->title(__('Saved as a draft'))
+                ->body(__('Only staff of :office who are allowed to submit reports can send it for review.', ['office' => $record->department->name]))
                 ->send();
 
             return;
@@ -78,7 +78,7 @@ trait CreatesOfficeReport
 
     protected function getCreatedNotificationTitle(): ?string
     {
-        return $this->submitAfterSaving ? 'Report submitted' : 'Draft saved';
+        return $this->submitAfterSaving ? __('Report submitted') : __('Draft saved');
     }
 
     protected function getCreatedNotification(): ?Notification
@@ -89,7 +89,7 @@ trait CreatesOfficeReport
             ->success()
             ->title($this->getCreatedNotificationTitle())
             ->body($record->isEditable()
-                ? 'Your office can continue editing it until it is submitted.'
+                ? __('Your office can continue editing it until it is submitted.')
                 : ReportWorkflow::reviewerDescription($record->department));
     }
 

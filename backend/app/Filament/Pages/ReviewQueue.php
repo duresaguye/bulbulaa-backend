@@ -6,6 +6,7 @@ use App\Enums\ReportStatus;
 use App\Filament\Resources\AnnualReports\AnnualReportResource;
 use App\Filament\Resources\MonthlyReports\MonthlyReportResource;
 use App\Filament\Resources\WeeklyProgressReports\WeeklyProgressReportResource;
+use App\Filament\Support\Concerns\TranslatesPageLabels;
 use App\Filament\Support\OfficeScope;
 use App\Filament\Support\ReportTableParts;
 use App\Models\AnnualReport;
@@ -32,6 +33,7 @@ use Livewire\Attributes\Url;
 class ReviewQueue extends Page implements HasTable
 {
     use InteractsWithTable;
+    use TranslatesPageLabels;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInboxArrowDown;
 
@@ -63,7 +65,7 @@ class ReviewQueue extends Page implements HasTable
 
     public function getSubheading(): string
     {
-        return 'Reports from subordinate offices waiting for your decision. You never see reports you prepared or submitted yourself.';
+        return __('Reports from subordinate offices waiting for your decision. You never see reports you prepared or submitted yourself.');
     }
 
     /**
@@ -74,7 +76,7 @@ class ReviewQueue extends Page implements HasTable
         $user = OfficeScope::user();
 
         return collect($this->types())->map(fn (string $model, string $key): array => [
-            'label' => ['weekly' => 'Weekly', 'monthly' => 'Monthly', 'annual' => 'Annual'][$key],
+            'label' => ['weekly' => __('Weekly'), 'monthly' => __('Monthly'), 'annual' => __('Annual')][$key],
             'count' => $user === null ? 0 : OfficeOverview::reviewQueueQuery($model, $user)->count(),
         ])->all();
     }
@@ -90,32 +92,32 @@ class ReviewQueue extends Page implements HasTable
             ->query(fn (): Builder => $this->queueQuery())
             ->columns([
                 TextColumn::make('department.name')
-                    ->label('Office')
+                    ->label(__('Office'))
                     ->wrap()
                     ->description(fn (Model $record): ?HtmlString => ReportTableParts::phoneDetail($record->periodLabel()))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('period')->label('Period')->state(fn (Model $record): string => $record->periodLabel())->visibleFrom('md'),
-                TextColumn::make('preparedBy.name')->label('Prepared by')->visibleFrom('lg'),
-                TextColumn::make('submittedBy.name')->label('Submitted by')->visibleFrom('xl'),
-                TextColumn::make('submitted_at')->label('Waiting since')->since()->dateTimeTooltip()->sortable(),
+                TextColumn::make('period')->label(__('Period'))->state(fn (Model $record): string => $record->periodLabel())->visibleFrom('md'),
+                TextColumn::make('preparedBy.name')->label(__('Prepared by'))->visibleFrom('lg'),
+                TextColumn::make('submittedBy.name')->label(__('Submitted by'))->visibleFrom('xl'),
+                TextColumn::make('submitted_at')->label(__('Waiting since'))->since()->dateTimeTooltip()->sortable(),
             ])
             ->defaultSort('submitted_at')
             ->filters([
                 SelectFilter::make('department_id')
-                    ->label('Office')
+                    ->label(__('Office'))
                     ->options(fn (): array => OfficeScope::visibleOfficeOptions()),
             ])
             ->recordUrl(fn (Model $record): string => $this->resourceFor()::getUrl('view', ['record' => $record]))
             ->recordActions([
                 Action::make('review')
-                    ->label('Review')
+                    ->label(__('Review'))
                     ->button()
                     ->url(fn (Model $record): string => $this->resourceFor()::getUrl('view', ['record' => $record])),
             ])
             ->emptyStateIcon(Heroicon::OutlinedCheckCircle)
-            ->emptyStateHeading('Nothing waiting for review')
-            ->emptyStateDescription('New submissions from your subordinate offices will appear here.');
+            ->emptyStateHeading(__('Nothing waiting for review'))
+            ->emptyStateDescription(__('New submissions from your subordinate offices will appear here.'));
     }
 
     private function queueQuery(): Builder

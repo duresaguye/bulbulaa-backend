@@ -8,6 +8,7 @@ use App\Filament\Resources\WeeklyProgressReports\Pages\ListWeeklyProgressReports
 use App\Filament\Resources\WeeklyProgressReports\Pages\ViewWeeklyProgressReport;
 use App\Filament\Resources\WeeklyProgressReports\Schemas\WeeklyProgressReportForm;
 use App\Filament\Resources\WeeklyProgressReports\Tables\WeeklyProgressReportsTable;
+use App\Filament\Support\Concerns\TranslatesResourceLabels;
 use App\Filament\Support\OfficeScope;
 use App\Models\Department;
 use App\Models\User;
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class WeeklyProgressReportResource extends Resource
 {
+    use TranslatesResourceLabels;
+
     protected static ?string $model = WeeklyProgressReport::class;
 
     protected static bool $hasTitleCaseModelLabel = false;

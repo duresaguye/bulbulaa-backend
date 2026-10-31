@@ -19,9 +19,9 @@ class ViewMonthlyReport extends ViewRecord
         $lines = $this->getRecord()->lines()->with('monthlyPlan.annualTarget')->get();
 
         return [
-            'heading' => 'Results against monthly targets',
-            'target_label' => 'Monthly target',
-            'actual_label' => 'Actual',
+            'heading' => __('Results against monthly targets'),
+            'target_label' => __('Monthly target'),
+            'actual_label' => __('Actual'),
             'rows' => $lines->map(function (MonthlyReportLine $line): array {
                 $target = $line->monthlyPlan->annualTarget;
 
@@ -42,9 +42,9 @@ class ViewMonthlyReport extends ViewRecord
         $record = $this->getRecord();
 
         return [
-            ['label' => 'Summary of completed activities', 'value' => $record->summary],
-            ['label' => 'Reasons for missed targets', 'value' => $record->missed_target_reasons],
-            ['label' => 'Corrective actions', 'value' => $record->corrective_actions],
+            ['label' => __('Summary of completed activities'), 'value' => $record->summary],
+            ['label' => __('Reasons for missed targets'), 'value' => $record->missed_target_reasons],
+            ['label' => __('Corrective actions'), 'value' => $record->corrective_actions],
         ];
     }
 }

@@ -20,35 +20,35 @@ class AnnualTargetsTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Target')
-                    ->description(fn (AnnualTarget $record): string => $record->department->name.($record->parent_id ? ', share of '.$record->parent->department->name : ''))
+                    ->label(__('Target'))
+                    ->description(fn (AnnualTarget $record): string => $record->parent_id ? __(':office, share of :parent', ['office' => $record->department->name, 'parent' => $record->parent->department->name]) : $record->department->name)
                     ->searchable()
                     ->wrap(),
-                TextColumn::make('fiscal_year')->label('Year')->sortable()->visibleFrom('md'),
+                TextColumn::make('fiscal_year')->label(__('Year'))->sortable()->visibleFrom('md'),
                 TextColumn::make('target_value')
-                    ->label('Annual target')
+                    ->label(__('Annual target'))
                     ->formatStateUsing(fn (AnnualTarget $record): string => $record->formatValue($record->target_value))
                     ->description(fn (AnnualTarget $record): string => $record->measurement_unit)
                     ->alignEnd()
                     ->sortable()
                     ->visibleFrom('lg'),
                 TextColumn::make('reported')
-                    ->label('Reported to date')
+                    ->label(__('Reported to date'))
                     ->state(fn (AnnualTarget $record): string => $record->formatValue(self::summary($record)['actual']))
                     ->alignEnd()
                     ->visibleFrom('lg'),
                 TextColumn::make('achievement')
-                    ->label('Achieved')
+                    ->label(__('Achieved'))
                     ->state(fn (AnnualTarget $record): string => self::summary($record)['achievement'] === null ? '—' : self::summary($record)['achievement'].'%')
                     ->alignEnd()
                     ->visibleFrom('sm'),
                 TextColumn::make('pace')
-                    ->label('Pace')
+                    ->label(__('Pace'))
                     ->badge()
                     ->state(fn (AnnualTarget $record): string => TargetProgress::paceLabel(self::summary($record)['status']))
                     ->color(fn (AnnualTarget $record): string => TargetProgress::paceColor(self::summary($record)['status'])),
                 TextColumn::make('allocation')
-                    ->label('Monthly allocation')
+                    ->label(__('Monthly allocation'))
                     ->badge()
                     ->state(fn (AnnualTarget $record): string => self::allocationLabel($record))
                     ->color(fn (AnnualTarget $record): string => self::allocationColor($record))
@@ -58,21 +58,21 @@ class AnnualTargetsTable
             ->defaultSort('fiscal_year', 'desc')
             ->filters([
                 SelectFilter::make('department_id')
-                    ->label('Office')
+                    ->label(__('Office'))
                     ->options(fn (): array => OfficeScope::visibleOfficeOptions())
                     ->searchable(),
                 SelectFilter::make('fiscal_year')
-                    ->label('Year (E.C.)')
+                    ->label(__('Year (E.C.)'))
                     ->options(fn (): array => AnnualTarget::query()
                         ->distinct()
                         ->orderByDesc('fiscal_year')
                         ->pluck('fiscal_year', 'fiscal_year')
                         ->all()),
-                TernaryFilter::make('is_active')->label('Active')->default(true),
+                TernaryFilter::make('is_active')->label(__('Active'))->default(true),
             ])
             ->recordActions([ViewAction::make(), EditAction::make()])
-            ->emptyStateHeading('No annual targets')
-            ->emptyStateDescription('The city administration assigns annual targets to offices. Each office then splits its targets across months.');
+            ->emptyStateHeading(__('No annual targets'))
+            ->emptyStateDescription(__('The city administration assigns annual targets to offices. Each office then splits its targets across months.'));
     }
 
     /**
@@ -94,16 +94,16 @@ class AnnualTargetsTable
     public static function allocationLabel(AnnualTarget $target): string
     {
         if ($target->monthlyPlans->isEmpty()) {
-            return 'Not allocated';
+            return __('Not allocated');
         }
 
         $gap = $target->allocationGap();
 
         return match (true) {
-            $gap === null => $target->monthlyPlans->count().' months set',
-            $gap == 0 => 'Matches annual target',
-            $gap > 0 => $target->formatValue($gap).' unallocated',
-            default => $target->formatValue(abs($gap)).' over target',
+            $gap === null => trans_choice(':count month set|:count months set', $target->monthlyPlans->count()),
+            $gap == 0 => __('Matches annual target'),
+            $gap > 0 => __(':value unallocated', ['value' => $target->formatValue($gap)]),
+            default => __(':value over target', ['value' => $target->formatValue(abs($gap))]),
         };
     }
 

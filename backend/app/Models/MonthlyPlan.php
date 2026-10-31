@@ -39,7 +39,7 @@ class MonthlyPlan extends Model
 
     public function ethiopianMonthName(): string
     {
-        return self::ETHIOPIAN_MONTHS[$this->ethiopian_month];
+        return __(self::ETHIOPIAN_MONTHS[$this->ethiopian_month]);
     }
 
     public function weeklyProgressEntries(): HasMany

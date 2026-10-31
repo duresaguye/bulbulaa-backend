@@ -17,18 +17,18 @@ enum Aggregation: string implements HasDescription, HasLabel
     public function getLabel(): string
     {
         return match ($this) {
-            self::Sum => 'Count or total',
-            self::Average => 'Average rate',
-            self::Latest => 'Current level',
+            self::Sum => __('Count or total'),
+            self::Average => __('Average rate'),
+            self::Latest => __('Current level'),
         };
     }
 
     public function getDescription(): string
     {
         return match ($this) {
-            self::Sum => 'Results add up across periods, for example requests processed or kilometres built. Monthly targets should total the annual target.',
-            self::Average => 'Each period has its own rate, for example a satisfaction percentage. The year is the average of reported periods.',
-            self::Latest => 'The most recent value is the result, for example coverage reached so far. The year is the latest reported value.',
+            self::Sum => __('Results add up across periods, for example requests processed or kilometres built. Monthly targets should total the annual target.'),
+            self::Average => __('Each period has its own rate, for example a satisfaction percentage. The year is the average of reported periods.'),
+            self::Latest => __('The most recent value is the result, for example coverage reached so far. The year is the latest reported value.'),
         };
     }
 

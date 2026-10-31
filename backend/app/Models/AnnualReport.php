@@ -24,7 +24,7 @@ class AnnualReport extends Model
 
     public function periodLabel(): string
     {
-        return 'Year '.$this->ethiopian_fiscal_year;
+        return __('Year :year', ['year' => $this->ethiopian_fiscal_year]);
     }
 
     protected function casts(): array
