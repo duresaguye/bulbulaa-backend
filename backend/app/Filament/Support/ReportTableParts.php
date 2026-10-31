@@ -6,12 +6,21 @@ use App\Enums\ReportStatus;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\HtmlString;
 
 /**
  * Columns and filters every report list uses, so the lists look and behave the same.
  */
 class ReportTableParts
 {
+    /**
+     * A second line under a list's first column that only shows on phones, carrying a column hidden there.
+     */
+    public static function phoneDetail(?string $text): ?HtmlString
+    {
+        return blank($text) ? null : new HtmlString('<span class="rt-phone-only">'.e($text).'</span>');
+    }
+
     public static function statusColumn(): TextColumn
     {
         return TextColumn::make('status')

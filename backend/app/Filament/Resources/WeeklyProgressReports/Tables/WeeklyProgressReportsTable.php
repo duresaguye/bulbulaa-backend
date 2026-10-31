@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class WeeklyProgressReportsTable
 {
@@ -16,10 +17,16 @@ class WeeklyProgressReportsTable
     {
         return $table
             ->columns([
-                TextColumn::make('department.name')->label('Office')->searchable()->sortable(),
+                TextColumn::make('department.name')
+                    ->label('Office')
+                    ->wrap()
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->periodLabel()))
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('period')
                     ->label('Period')
                     ->state(fn ($record): string => $record->periodLabel())
+                    ->visibleFrom('md')
                     ->sortable(['ethiopian_fiscal_year', 'ethiopian_month', 'week_number']),
                 ReportTableParts::statusColumn(),
                 TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable()->visibleFrom('lg'),

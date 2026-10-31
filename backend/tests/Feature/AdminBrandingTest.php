@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\WeeklyProgressReports\Pages\ListWeeklyProgressReports;
 use App\Filament\Support\InitialsAvatarProvider;
 use App\Models\AnnualTarget;
 use App\Models\User;
 use App\Models\WeeklyProgressReport;
 use Database\Seeders\DemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use RuntimeException;
 use Tests\Concerns\BuildsOrganization;
 use Tests\TestCase;
@@ -46,6 +48,20 @@ class AdminBrandingTest extends TestCase
             ->assertOk()
             ->assertSee('rt-table--cards', false)
             ->assertSee('data-label="Overdue"', false);
+    }
+
+    public function test_report_lists_repeat_the_period_under_the_office_for_phones(): void
+    {
+        $this->buildOrganization();
+        $report = WeeklyProgressReport::factory()->create(['department_id' => $this->office->id]);
+        $report->forceFill(['status' => 'submitted', 'submitted_at' => now()])->save();
+
+        $this->actingAs($this->supervisor());
+
+        Livewire::test(ListWeeklyProgressReports::class)
+            ->assertCanSeeTableRecords([$report])
+            ->assertSeeHtml('rt-phone-only')
+            ->assertSee($report->periodLabel());
     }
 
     public function test_the_demo_seeder_builds_a_year_of_fictional_reports(): void

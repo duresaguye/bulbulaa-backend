@@ -40,7 +40,8 @@ class AnnualTargetsTable
                 TextColumn::make('achievement')
                     ->label('Achieved')
                     ->state(fn (AnnualTarget $record): string => self::summary($record)['achievement'] === null ? '—' : self::summary($record)['achievement'].'%')
-                    ->alignEnd(),
+                    ->alignEnd()
+                    ->visibleFrom('sm'),
                 TextColumn::make('pace')
                     ->label('Pace')
                     ->badge()

@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\AuditLogs\Tables;
 
+use App\Filament\Support\ReportTableParts;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class AuditLogsTable
@@ -16,11 +18,13 @@ class AuditLogsTable
                 TextColumn::make('created_at')
                     ->label('When')
                     ->dateTime('j M Y, H:i')
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->user?->name ?? 'System'))
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->label('By')
                     ->placeholder('System')
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('md'),
                 TextColumn::make('event')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -32,7 +36,8 @@ class AuditLogsTable
                 TextColumn::make('auditable_type')
                     ->label('Record')
                     ->formatStateUsing(fn (?string $state, $record): string => Str::headline(class_basename((string) $state)).' #'.$record->auditable_id)
-                    ->searchable(),
+                    ->searchable()
+                    ->visibleFrom('sm'),
                 TextColumn::make('new_values')
                     ->label('New values')
                     ->formatStateUsing(fn ($state): string => is_array($state) ? json_encode($state) : (string) $state)

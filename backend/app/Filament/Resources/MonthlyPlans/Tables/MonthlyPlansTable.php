@@ -14,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class MonthlyPlansTable
 {
@@ -23,12 +24,14 @@ class MonthlyPlansTable
             ->columns([
                 TextColumn::make('annualTarget.title')
                     ->label('Target')
-                    ->description(fn (MonthlyPlan $record): string => $record->annualTarget->department->name)
+                    ->description(fn (MonthlyPlan $record): HtmlString => new HtmlString(e($record->annualTarget->department->name)
+                        .'<span class="rt-phone-only">, '.e($record->ethiopianMonthName().' '.$record->annualTarget->fiscal_year).'</span>'))
                     ->searchable()
                     ->wrap(),
                 TextColumn::make('ethiopian_month')->label('Month')
                     ->formatStateUsing(fn (MonthlyPlan $record): string => $record->ethiopianMonthName().' '.$record->annualTarget->fiscal_year)
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('md'),
                 TextColumn::make('planned_value')
                     ->label('Monthly target')
                     ->formatStateUsing(fn (MonthlyPlan $record): string => $record->annualTarget->formatValue($record->planned_value))

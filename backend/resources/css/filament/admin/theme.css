@@ -859,6 +859,27 @@
         line-height: 1.5;
     }
 
+    /* Shown only on phones, where the column it repeats is hidden. Matches Filament's md breakpoint. */
+    @media (min-width: 48rem) {
+        .rt-phone-only,
+        .fi-ta-text-description:has(> .rt-phone-only:only-child) {
+            display: none;
+        }
+    }
+
+    /* Very small phones: tighter list cells so the status column stays on screen. */
+    @media (max-width: 25rem) {
+        .fi-ta-row .fi-ta-text,
+        .fi-ta-header-cell {
+            padding-inline: 0.5rem;
+        }
+
+        .fi-ta-row .fi-badge {
+            white-space: normal;
+            text-align: start;
+        }
+    }
+
     /* Phones: tables become one card per row, each value labelled ------------ */
 
     @media (max-width: 40rem) {

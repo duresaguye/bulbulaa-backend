@@ -7,6 +7,7 @@ use App\Filament\Resources\AnnualReports\AnnualReportResource;
 use App\Filament\Resources\MonthlyReports\MonthlyReportResource;
 use App\Filament\Resources\WeeklyProgressReports\WeeklyProgressReportResource;
 use App\Filament\Support\OfficeScope;
+use App\Filament\Support\ReportTableParts;
 use App\Models\AnnualReport;
 use App\Models\MonthlyReport;
 use App\Models\WeeklyProgressReport;
@@ -22,6 +23,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Livewire\Attributes\Url;
 
 /**
@@ -87,10 +89,15 @@ class ReviewQueue extends Page implements HasTable
         return $table
             ->query(fn (): Builder => $this->queueQuery())
             ->columns([
-                TextColumn::make('department.name')->label('Office')->searchable()->sortable(),
-                TextColumn::make('period')->label('Period')->state(fn (Model $record): string => $record->periodLabel()),
-                TextColumn::make('preparedBy.name')->label('Prepared by'),
-                TextColumn::make('submittedBy.name')->label('Submitted by'),
+                TextColumn::make('department.name')
+                    ->label('Office')
+                    ->wrap()
+                    ->description(fn (Model $record): ?HtmlString => ReportTableParts::phoneDetail($record->periodLabel()))
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('period')->label('Period')->state(fn (Model $record): string => $record->periodLabel())->visibleFrom('md'),
+                TextColumn::make('preparedBy.name')->label('Prepared by')->visibleFrom('lg'),
+                TextColumn::make('submittedBy.name')->label('Submitted by')->visibleFrom('xl'),
                 TextColumn::make('submitted_at')->label('Waiting since')->since()->dateTimeTooltip()->sortable(),
             ])
             ->defaultSort('submitted_at')

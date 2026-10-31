@@ -19,6 +19,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class AnnualReportResource extends Resource
 {
@@ -47,8 +48,13 @@ class AnnualReportResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('department.name')->label('Office')->searchable()->sortable(),
-                TextColumn::make('ethiopian_fiscal_year')->label('Year (E.C.)')->sortable(),
+                TextColumn::make('department.name')
+                    ->label('Office')
+                    ->wrap()
+                    ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail('Year '.$record->ethiopian_fiscal_year.' E.C.'))
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('ethiopian_fiscal_year')->label('Year (E.C.)')->sortable()->visibleFrom('md'),
                 ReportTableParts::statusColumn(),
                 TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable()->visibleFrom('lg'),
                 TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable()->visibleFrom('md'),
