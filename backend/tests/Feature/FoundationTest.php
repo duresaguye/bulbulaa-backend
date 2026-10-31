@@ -38,7 +38,7 @@ class FoundationTest extends TestCase
         $user->roles()->attach($role);
 
         $this->assertTrue($user->hasPermission('reports.view'));
-        $this->assertFalse($user->hasPermission('attendance.manage'));
+        $this->assertFalse($user->hasPermission('users.manage'));
     }
 
     public function test_changes_are_recorded_without_sensitive_user_values(): void

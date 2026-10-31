@@ -22,8 +22,8 @@ class MonthlyReportsTable
                     ->state(fn ($record): string => $record->periodLabel())
                     ->sortable(['ethiopian_fiscal_year', 'ethiopian_month']),
                 ReportTableParts::statusColumn(),
-                TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable(),
-                TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable(),
+                TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable()->visibleFrom('lg'),
+                TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable()->visibleFrom('md'),
             ])
             ->defaultSort(fn ($query) => $query
                 ->orderByDesc('ethiopian_fiscal_year')

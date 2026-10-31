@@ -43,7 +43,7 @@
                     <p class="rt-muted">No results recorded.</p>
                 @else
                     <div class="rt-table-wrap">
-                        <table class="rt-table">
+                        <table class="rt-table rt-table--cards">
                             <thead>
                                 <tr>
                                     <th scope="col">Target</th>
@@ -62,9 +62,9 @@
                                                 <span class="rt-note">{{ $row['note'] }}</span>
                                             @endif
                                         </td>
-                                        <td class="rt-num">{{ $row['target'] }}</td>
-                                        <td class="rt-num">{{ $row['actual'] }}</td>
-                                        <td class="rt-num">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
+                                        <td class="rt-num" data-label="{{ $results['target_label'] }}">{{ $row['target'] }}</td>
+                                        <td class="rt-num" data-label="{{ $results['actual_label'] }}">{{ $row['actual'] }}</td>
+                                        <td class="rt-num" data-label="Achievement">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

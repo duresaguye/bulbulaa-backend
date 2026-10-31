@@ -129,16 +129,18 @@
                         @if ($activity->isEmpty())
                             <p class="rt-muted">No reports have been submitted yet.</p>
                         @else
-                            <ol class="rt-timeline">
+                            <ol class="rt-timeline rt-timeline--compact">
                                 @foreach ($activity as $review)
-                                    <li>
-                                        <x-filament::badge :color="$review->action->getColor()">{{ $review->action->getLabel() }}</x-filament::badge>
-                                        @if ($url = $this::reviewableUrl($review))
-                                            <a class="rt-link" href="{{ $url }}">{{ $this::reviewableLabel($review) }}</a>
-                                        @else
-                                            <span>{{ $this::reviewableLabel($review) }}</span>
-                                        @endif
-                                        <span class="rt-muted rt-small">{{ $review->user?->name }}, {{ $review->created_at->diffForHumans() }}</span>
+                                    <li class="rt-activity">
+                                        <span class="rt-activity__dot rt-activity__dot--{{ $review->action->getColor() }}" aria-hidden="true"></span>
+                                        <div>
+                                            @if ($url = $this::reviewableUrl($review))
+                                                <a class="rt-link" href="{{ $url }}">{{ $this::reviewableLabel($review) }}</a>
+                                            @else
+                                                <span>{{ $this::reviewableLabel($review) }}</span>
+                                            @endif
+                                            <span class="rt-muted rt-small rt-block">{{ $review->action->getLabel() }} by {{ $review->user?->name }}, {{ $review->created_at->diffForHumans() }}</span>
+                                        </div>
                                     </li>
                                 @endforeach
                             </ol>
@@ -154,7 +156,7 @@
                         <p class="rt-muted">No annual targets are assigned to your office for {{ $this->year }}.</p>
                     @else
                         <div class="rt-table-wrap">
-                            <table class="rt-table">
+                            <table class="rt-table rt-table--cards">
                                 <thead>
                                     <tr>
                                         <th scope="col">Target</th>
@@ -169,11 +171,11 @@
                                     @foreach ($targets as $item)
                                         @php($target = $item['target'])
                                         <tr>
-                                            <td>
+                                            <td class="rt-card-title">
                                                 <a class="rt-link rt-strong" href="{{ \App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('view', ['record' => $target]) }}">{{ $target->title }}</a>
                                                 <span class="rt-muted rt-block rt-small">{{ $target->measurement_unit }}@if ($this->myOffices()->count() > 1), {{ $target->department->name }}@endif</span>
                                             </td>
-                                            <td class="rt-num">
+                                            <td class="rt-num" data-label="This month">
                                                 @if ($item['month_target'] === null)
                                                     <span class="rt-muted">—</span>
                                                 @else
@@ -181,13 +183,13 @@
                                                     <span class="rt-muted rt-block rt-small">{{ ($pct = TargetProgress::achievement($item['month_actual'] ?? 0, $item['month_target'])) === null ? '' : $pct.'%' }}</span>
                                                 @endif
                                             </td>
-                                            <td class="rt-num">{{ $target->formatValue($target->target_value) }}</td>
-                                            <td class="rt-num">
+                                            <td class="rt-num" data-label="Annual target">{{ $target->formatValue($target->target_value) }}</td>
+                                            <td class="rt-num" data-label="Achieved so far">
                                                 {{ $target->formatValue($item['summary']['actual']) }}
                                                 <span class="rt-muted rt-block rt-small">{{ $item['summary']['achievement'] === null ? '' : $item['summary']['achievement'].'%' }}</span>
                                             </td>
-                                            <td class="rt-cell-bar"><x-rt.pace-bar :summary="$item['summary']" :label="$target->title" /></td>
-                                            <td>
+                                            <td class="rt-cell-bar" data-label="Progress"><x-rt.pace-bar :summary="$item['summary']" :label="$target->title" /></td>
+                                            <td data-label="Pace">
                                                 <x-filament::badge :color="TargetProgress::paceColor($item['summary']['status'])">{{ TargetProgress::paceLabel($item['summary']['status']) }}</x-filament::badge>
                                             </td>
                                         </tr>

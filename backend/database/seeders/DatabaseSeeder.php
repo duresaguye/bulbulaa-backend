@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'reports.submit', 'label' => 'Submit office reports for review'],
             ['name' => 'reports.review', 'label' => 'Approve or return reports from subordinate offices'],
             ['name' => 'targets.distribute', 'label' => 'Distribute targets to subordinate offices'],
-            ['name' => 'attendance.manage', 'label' => 'Manage attendance'],
             ['name' => 'cms.manage', 'label' => 'Manage public content'],
         ])->mapWithKeys(function (array $attributes): array {
             $permission = Permission::firstOrCreate(
@@ -60,10 +59,6 @@ class DatabaseSeeder extends Seeder
             'reporting_officer' => [
                 'label' => 'Reporting officer',
                 'permissions' => ['reports.view', 'reports.manage'],
-            ],
-            'hr_officer' => [
-                'label' => 'HR officer',
-                'permissions' => ['attendance.manage'],
             ],
             'content_manager' => [
                 'label' => 'Content manager',

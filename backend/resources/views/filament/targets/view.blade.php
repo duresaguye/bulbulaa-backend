@@ -62,7 +62,7 @@
                     </x-filament::callout>
                 @endif
                 <div class="rt-table-wrap">
-                    <table class="rt-table">
+                    <table class="rt-table rt-table--cards">
                         <thead>
                             <tr>
                                 <th scope="col">Month</th>
@@ -82,18 +82,18 @@
                                                 <span class="rt-muted rt-block rt-small">{{ \Illuminate\Support\Str::limit($row['activities'], 120) }}</span>
                                             @endif
                                         </td>
-                                        <td class="rt-num">{{ $format($row['planned']) }}</td>
-                                        <td class="rt-num">{{ $format($row['actual']) }}</td>
-                                        <td class="rt-num">{{ ($pct = \App\Services\TargetProgress::achievement($row['actual'], $row['planned'])) === null ? '—' : $pct.'%' }}</td>
-                                        <td class="rt-muted">{{ $row['source'] ?? 'Not reported' }}</td>
+                                        <td class="rt-num" data-label="Target">{{ $format($row['planned']) }}</td>
+                                        <td class="rt-num" data-label="Actual">{{ $format($row['actual']) }}</td>
+                                        <td class="rt-num" data-label="Achieved">{{ ($pct = \App\Services\TargetProgress::achievement($row['actual'], $row['planned'])) === null ? '—' : $pct.'%' }}</td>
+                                        <td class="rt-muted" data-label="Source">{{ $row['source'] ?? 'Not reported' }}</td>
                                     </tr>
                                 @endforeach
                                 <tr class="rt-table__subtotal">
                                     <th scope="row">Quarter {{ $quarter }}</th>
-                                    <td class="rt-num">{{ $format($group['planned']) }}</td>
-                                    <td class="rt-num">{{ $format($group['actual']) }}</td>
-                                    <td class="rt-num">{{ ($pct = \App\Services\TargetProgress::achievement($group['actual'], $group['planned'])) === null ? '—' : $pct.'%' }}</td>
-                                    <td></td>
+                                    <td class="rt-num" data-label="Target">{{ $format($group['planned']) }}</td>
+                                    <td class="rt-num" data-label="Actual">{{ $format($group['actual']) }}</td>
+                                    <td class="rt-num" data-label="Achieved">{{ ($pct = \App\Services\TargetProgress::achievement($group['actual'], $group['planned'])) === null ? '—' : $pct.'%' }}</td>
+                                    <td class="rt-empty"></td>
                                 </tr>
                             </tbody>
                         @endforeach
@@ -110,7 +110,7 @@
                     </p>
                 @endif
                 <div class="rt-table-wrap">
-                    <table class="rt-table">
+                    <table class="rt-table rt-table--cards">
                         <thead>
                             <tr>
                                 <th scope="col">Office</th>
@@ -128,10 +128,10 @@
                                             {{ $child['target']->department->name }}
                                         </a>
                                     </td>
-                                    <td class="rt-num">{{ $format($child['target']->target_value) }}</td>
-                                    <td class="rt-num">{{ $format($child['summary']['actual']) }}</td>
-                                    <td class="rt-cell-bar"><x-rt.pace-bar :summary="$child['summary']" :label="$child['target']->department->name" /></td>
-                                    <td>
+                                    <td class="rt-num" data-label="Target">{{ $format($child['target']->target_value) }}</td>
+                                    <td class="rt-num" data-label="Reported">{{ $format($child['summary']['actual']) }}</td>
+                                    <td class="rt-cell-bar" data-label="Progress"><x-rt.pace-bar :summary="$child['summary']" :label="$child['target']->department->name" /></td>
+                                    <td data-label="Pace">
                                         <x-filament::badge :color="\App\Services\TargetProgress::paceColor($child['summary']['status'])">
                                             {{ \App\Services\TargetProgress::paceLabel($child['summary']['status']) }}
                                         </x-filament::badge>

@@ -50,8 +50,8 @@ class AnnualReportResource extends Resource
                 TextColumn::make('department.name')->label('Office')->searchable()->sortable(),
                 TextColumn::make('ethiopian_fiscal_year')->label('Year (E.C.)')->sortable(),
                 ReportTableParts::statusColumn(),
-                TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable(),
-                TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable(),
+                TextColumn::make('preparedBy.name')->label('Prepared by')->toggleable()->visibleFrom('lg'),
+                TextColumn::make('submitted_at')->label('Submitted')->since()->dateTimeTooltip()->placeholder('Not submitted')->sortable()->visibleFrom('md'),
             ])
             ->defaultSort('ethiopian_fiscal_year', 'desc')
             ->filters([

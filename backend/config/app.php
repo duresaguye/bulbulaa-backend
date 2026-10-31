@@ -16,6 +16,12 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
+    | The town this installation serves. Shown in the admin brand, sign-in page and page titles.
+    */
+
+    'town_name' => env('TOWN_NAME', 'Bulbulaa'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------

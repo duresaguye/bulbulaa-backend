@@ -6,7 +6,7 @@
     <p class="rt-muted">No annual targets are assigned to this office for the selected year.</p>
 @else
     <div class="rt-table-wrap">
-        <table class="rt-table">
+        <table class="rt-table rt-table--cards">
             <thead>
                 <tr>
                     <th scope="col">Target</th>
@@ -23,15 +23,15 @@
                             <span class="rt-strong">{{ $row['title'] }}</span>
                             <span class="rt-muted rt-block">{{ $row['unit'] }}, {{ \App\Enums\Aggregation::from($row['aggregation'])->getLabel() }}</span>
                         </td>
-                        <td class="rt-num">{{ $format($row['original_target']) }}</td>
-                        <td class="rt-num">
+                        <td class="rt-num" data-label="Originally assigned">{{ $format($row['original_target']) }}</td>
+                        <td class="rt-num" data-label="Current target">
                             {{ $format($row['current_target']) }}
                             @if ($row['current_target'] != $row['original_target'])
                                 <span class="rt-muted rt-block">Revised</span>
                             @endif
                         </td>
-                        <td class="rt-num">{{ $format($row['actual']) }}</td>
-                        <td class="rt-num">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
+                        <td class="rt-num" data-label="Approved result">{{ $format($row['actual']) }}</td>
+                        <td class="rt-num" data-label="Achievement">{{ $row['achievement'] === null ? '—' : $row['achievement'].'%' }}</td>
                     </tr>
                 @endforeach
             </tbody>

@@ -24,17 +24,19 @@ class AnnualTargetsTable
                     ->description(fn (AnnualTarget $record): string => $record->department->name.($record->parent_id ? ', share of '.$record->parent->department->name : ''))
                     ->searchable()
                     ->wrap(),
-                TextColumn::make('fiscal_year')->label('Year')->sortable(),
+                TextColumn::make('fiscal_year')->label('Year')->sortable()->visibleFrom('md'),
                 TextColumn::make('target_value')
                     ->label('Annual target')
                     ->formatStateUsing(fn (AnnualTarget $record): string => $record->formatValue($record->target_value))
                     ->description(fn (AnnualTarget $record): string => $record->measurement_unit)
                     ->alignEnd()
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('lg'),
                 TextColumn::make('reported')
                     ->label('Reported to date')
                     ->state(fn (AnnualTarget $record): string => $record->formatValue(self::summary($record)['actual']))
-                    ->alignEnd(),
+                    ->alignEnd()
+                    ->visibleFrom('lg'),
                 TextColumn::make('achievement')
                     ->label('Achieved')
                     ->state(fn (AnnualTarget $record): string => self::summary($record)['achievement'] === null ? '—' : self::summary($record)['achievement'].'%')
@@ -48,7 +50,8 @@ class AnnualTargetsTable
                     ->label('Monthly allocation')
                     ->badge()
                     ->state(fn (AnnualTarget $record): string => self::allocationLabel($record))
-                    ->color(fn (AnnualTarget $record): string => self::allocationColor($record)),
+                    ->color(fn (AnnualTarget $record): string => self::allocationColor($record))
+                    ->visibleFrom('xl'),
             ])
             ->modifyQueryUsing(fn ($query) => $query->with(['department', 'parent.department', 'monthlyPlans', 'children.monthlyPlans']))
             ->defaultSort('fiscal_year', 'desc')

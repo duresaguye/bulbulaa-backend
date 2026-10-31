@@ -9,7 +9,7 @@
 @endphp
 
 <div class="rt-table-wrap">
-    <table class="rt-table">
+    <table class="rt-table rt-table--cards">
         <thead>
             <tr>
                 <th scope="col">Office</th>
@@ -30,7 +30,7 @@
                             <span class="rt-muted rt-block rt-small">Under {{ $office->parent->name }}</span>
                         @endif
                     </th>
-                    <td>
+                    <td data-label="Targets">
                         @if ($row['targets']->isEmpty())
                             <span class="rt-muted">None assigned</span>
                         @else
@@ -42,33 +42,35 @@
                             </span>
                         @endif
                     </td>
-                    <td>
+                    <td data-label="Week {{ $week['week'] }}, {{ \App\Services\EthiopianCalendar::monthName($week['month']) }}">
                         @if ($row['week_state'] !== 'not_required')
                             <x-filament::badge :color="ReportingCalendar::stateColor($row['week_state'])">{{ ReportingCalendar::stateLabel($row['week_state']) }}</x-filament::badge>
                         @else
                             <span class="rt-muted">—</span>
                         @endif
                     </td>
-                    <td>
+                    <td data-label="{{ \App\Services\EthiopianCalendar::monthName($month['month']) }} report">
                         @if ($row['month_state'] !== 'not_required')
                             <x-filament::badge :color="ReportingCalendar::stateColor($row['month_state'])">{{ ReportingCalendar::stateLabel($row['month_state']) }}</x-filament::badge>
                         @else
                             <span class="rt-muted">—</span>
                         @endif
                     </td>
-                    <td class="rt-num {{ $row['overdue'] > 0 ? 'rt-danger-text' : '' }}">{{ $row['overdue'] }}</td>
+                    <td data-label="Overdue" class="rt-num {{ $row['overdue'] > 0 ? 'rt-danger-text' : '' }}">{{ $row['overdue'] }}</td>
                     <td class="rt-row-actions">
-                        @if ($expandable && $row['targets']->isNotEmpty())
-                            <x-filament::link tag="button" size="sm" color="gray" wire:click="toggle({{ $office->id }})" :aria-expanded="$expanded === $office->id ? 'true' : 'false'">
-                                {{ $expanded === $office->id ? 'Hide targets' : 'Show targets' }}
-                            </x-filament::link>
-                        @endif
-                        <x-filament::link :href="\App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('index', ['filters' => ['department_id' => ['value' => $office->id]]])" size="sm">
-                            Targets
-                        </x-filament::link>
                         @if ($row['awaiting_review'] > 0 && \App\Filament\Pages\ReviewQueue::canAccess())
-                            <x-filament::link :href="\App\Filament\Pages\ReviewQueue::getUrl()" size="sm">
-                                Review ({{ $row['awaiting_review'] }})
+                            <x-filament::button tag="a" :href="\App\Filament\Pages\ReviewQueue::getUrl()" size="xs">
+                                Review {{ $row['awaiting_review'] }}
+                            </x-filament::button>
+                        @endif
+                        @if ($expandable && $row['targets']->isNotEmpty())
+                            <button type="button" class="rt-disclosure" wire:click="toggle({{ $office->id }})" aria-expanded="{{ $expanded === $office->id ? 'true' : 'false' }}">
+                                <span>{{ $expanded === $office->id ? 'Hide targets' : 'Targets' }}</span>
+                                <x-filament::icon icon="heroicon-m-chevron-down" class="rt-disclosure__icon" />
+                            </button>
+                        @elseif ($row['targets']->isNotEmpty() || ! $expandable)
+                            <x-filament::link :href="\App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('index', ['filters' => ['department_id' => ['value' => $office->id]]])" size="sm">
+                                Targets
                             </x-filament::link>
                         @endif
                     </td>
@@ -76,7 +78,7 @@
                 @if ($expandable && $expanded === $office->id)
                     <tr class="rt-table__detail">
                         <td colspan="6">
-                            <table class="rt-table rt-table--nested">
+                            <table class="rt-table rt-table--nested rt-table--cards">
                                 <thead>
                                     <tr>
                                         <th scope="col">Target</th>
@@ -90,21 +92,26 @@
                                 <tbody>
                                     @foreach ($row['targets'] as $item)
                                         <tr>
-                                            <td>
+                                            <td class="rt-card-title">
                                                 <a class="rt-link" href="{{ \App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('view', ['record' => $item['target']]) }}">{{ $item['target']->title }}</a>
                                                 <span class="rt-muted rt-block rt-small">{{ $item['target']->measurement_unit }}</span>
                                             </td>
-                                            <td class="rt-num">{{ $item['target']->formatValue($item['summary']['target']) }}</td>
-                                            <td class="rt-num">{{ $item['target']->formatValue($item['summary']['expected']) }}</td>
-                                            <td class="rt-num">{{ $item['target']->formatValue($item['summary']['actual']) }}</td>
-                                            <td class="rt-cell-bar"><x-rt.pace-bar :summary="$item['summary']" :label="$item['target']->title" /></td>
-                                            <td>
+                                            <td data-label="Annual target" class="rt-num">{{ $item['target']->formatValue($item['summary']['target']) }}</td>
+                                            <td data-label="Expected by now" class="rt-num">{{ $item['target']->formatValue($item['summary']['expected']) }}</td>
+                                            <td data-label="Reported" class="rt-num">{{ $item['target']->formatValue($item['summary']['actual']) }}</td>
+                                            <td class="rt-cell-bar" data-label="Progress"><x-rt.pace-bar :summary="$item['summary']" :label="$item['target']->title" /></td>
+                                            <td data-label="Pace">
                                                 <x-filament::badge :color="\App\Services\TargetProgress::paceColor($item['summary']['status'])">{{ \App\Services\TargetProgress::paceLabel($item['summary']['status']) }}</x-filament::badge>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            <p class="rt-detail-footer">
+                                <x-filament::link :href="\App\Filament\Resources\AnnualTargets\AnnualTargetResource::getUrl('index', ['filters' => ['department_id' => ['value' => $office->id]]])" size="sm">
+                                    Open {{ $office->name }} targets
+                                </x-filament::link>
+                            </p>
                         </td>
                     </tr>
                 @endif

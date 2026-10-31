@@ -34,11 +34,13 @@ class MonthlyPlansTable
                     ->formatStateUsing(fn (MonthlyPlan $record): string => $record->annualTarget->formatValue($record->planned_value))
                     ->description(fn (MonthlyPlan $record): string => $record->annualTarget->measurement_unit)
                     ->alignEnd()
-                    ->sortable(),
+                    ->sortable()
+                    ->visibleFrom('md'),
                 TextColumn::make('actual')
                     ->label('Actual')
                     ->state(fn (MonthlyPlan $record): string => $record->annualTarget->formatValue(app(TargetProgress::class)->monthActual($record)))
-                    ->alignEnd(),
+                    ->alignEnd()
+                    ->visibleFrom('md'),
                 TextColumn::make('achievement')
                     ->label('Achieved')
                     ->state(function (MonthlyPlan $record): string {

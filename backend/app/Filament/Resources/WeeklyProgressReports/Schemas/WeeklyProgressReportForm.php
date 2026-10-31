@@ -20,6 +20,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class WeeklyProgressReportForm
@@ -104,8 +105,9 @@ class WeeklyProgressReportForm
                         ->schema([
                             Hidden::make('monthly_plan_id')->required(),
                             TextEntry::make('plan_context')
-                                ->label('This month')
-                                ->state(fn (Get $get): string => self::planContext(self::plan($get('monthly_plan_id'))))
+                                ->hiddenLabel()
+                                ->state(fn (Get $get): HtmlString => self::planContext(self::plan($get('monthly_plan_id'))))
+                                ->html()
                                 ->columnSpan(2),
                             TextInput::make('actual_value')
                                 ->label('Achieved this week')
@@ -214,20 +216,19 @@ class WeeklyProgressReportForm
         return once(fn () => MonthlyPlan::with('annualTarget')->find($planId));
     }
 
-    private static function planContext(?MonthlyPlan $plan): string
+    private static function planContext(?MonthlyPlan $plan): HtmlString
     {
         if ($plan === null) {
-            return '';
+            return new HtmlString('');
         }
 
-        $target = $plan->annualTarget;
-        $reported = app(TargetProgress::class)->weeklyTotalForPlan($plan);
-        $context = 'Target '.$target->formatWithUnit($plan->planned_value)
-            .'. Reported in earlier weekly reports: '.$target->formatValue($reported ?? 0).'.';
-
-        return filled($plan->planned_activities)
-            ? $context.' Planned: '.Str::limit($plan->planned_activities, 160)
-            : $context;
+        return new HtmlString(view('filament.reports.plan-context', [
+            'target' => $plan->annualTarget,
+            'plannedValue' => $plan->planned_value,
+            'reported' => app(TargetProgress::class)->weeklyTotalForPlan($plan),
+            'reportedLabel' => 'Reported in earlier weeks',
+            'activities' => $plan->planned_activities,
+        ])->render());
     }
 
     private static function achievementHint(?MonthlyPlan $plan, mixed $actual): ?string
