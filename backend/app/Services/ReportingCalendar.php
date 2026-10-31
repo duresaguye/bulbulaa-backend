@@ -75,7 +75,7 @@ class ReportingCalendar
     {
         $ethiopian = EthiopianCalendar::fromGregorian($date);
 
-        return EthiopianCalendar::monthName($ethiopian['month']).' '.$ethiopian['day'].' ('.$date->format('j M Y').')';
+        return EthiopianCalendar::monthName($ethiopian['month']).' '.$ethiopian['day'].' ('.$date->format('d/m/Y').')';
     }
 
     /**

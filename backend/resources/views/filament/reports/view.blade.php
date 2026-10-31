@@ -17,7 +17,7 @@
             @if ($latestReturn)
                 <blockquote class="rt-status__comment">
                     <p>{{ $latestReturn->comment }}</p>
-                    <footer>{{ $latestReturn->user?->name ?? __('Reviewer') }}, {{ $latestReturn->created_at->format('j M Y, H:i') }}</footer>
+                    <footer>{{ $latestReturn->user?->name ?? __('Reviewer') }}, {{ \App\Services\EthiopianCalendar::display($latestReturn->created_at, withTime: true) }}</footer>
                 </blockquote>
             @endif
             <dl class="rt-meta">
@@ -28,7 +28,7 @@
                     <dt>{{ __('Submitted') }}</dt>
                     <dd>
                         @if ($record->submitted_at)
-                            {{ $record->submittedBy?->name }}, {{ $record->submitted_at->format('j M Y, H:i') }}
+                            {{ $record->submittedBy?->name }}, {{ \App\Services\EthiopianCalendar::display($record->submitted_at, withTime: true) }}
                         @else
                             {{ __('Not yet') }}
                         @endif
@@ -108,7 +108,7 @@
                         <li>
                             <x-filament::badge :color="$review->action->getColor()">{{ $review->action->getLabel() }}</x-filament::badge>
                             <span>{{ $review->user?->name ?? __('Unknown user') }}</span>
-                            <time class="rt-muted" datetime="{{ $review->created_at->toIso8601String() }}">{{ $review->created_at->format('j M Y, H:i') }}</time>
+                            <time class="rt-muted" datetime="{{ $review->created_at->toIso8601String() }}">{{ \App\Services\EthiopianCalendar::display($review->created_at, withTime: true) }}</time>
                             @if (filled($review->comment))
                                 <p class="rt-timeline__comment">{{ $review->comment }}</p>
                             @endif

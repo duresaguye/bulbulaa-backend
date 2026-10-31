@@ -25,9 +25,8 @@ class LanguageTest extends TestCase
 
     public function test_the_sign_in_page_language_can_be_switched_before_signing_in(): void
     {
-        $this->from('/admin/login')
-            ->get('/admin/language/am')
-            ->assertRedirect('/admin/login');
+        $this->get('/admin/language/am', ['Referer' => url('/admin/login')])
+            ->assertRedirect(url('/admin/login'));
 
         $this->get('/admin/login')->assertSee('lang="am"', false);
     }
@@ -57,6 +56,13 @@ class LanguageTest extends TestCase
             ->get('/admin')
             ->assertOk()
             ->assertSee('አጠቃላይ እይታ');
+    }
+
+    public function test_switching_language_never_returns_to_a_download_or_another_site(): void
+    {
+        $this->get('/admin/language/om', ['Referer' => url('/admin/exports/monthly/1/excel')])->assertRedirect('/admin');
+        $this->get('/admin/language/om', ['Referer' => 'https://example.com/admin'])->assertRedirect('/admin');
+        $this->get('/admin/language/om')->assertRedirect('/admin');
     }
 
     public function test_unsupported_languages_are_rejected(): void

@@ -115,6 +115,19 @@ class EthiopianCalendar
         return min(4, intdiv($month - 1, 3) + 1);
     }
 
+    /**
+     * A date as staff read it in any language: Ethiopian date with month name, then the Gregorian date in numbers.
+     * Numbers avoid confusion in Afaan Oromoo, where Ethiopian and Gregorian months share names.
+     */
+    public static function display(\DateTimeInterface $date, bool $withTime = false): string
+    {
+        $date = CarbonImmutable::instance($date)->setTimezone(config('app.timezone'));
+        $ethiopian = self::fromGregorian($date);
+
+        return __(':date E.C.', ['date' => self::format($ethiopian['year'], $ethiopian['month'], $ethiopian['day'])])
+            .' ('.$date->format($withTime ? 'd/m/Y, H:i' : 'd/m/Y').')';
+    }
+
     public static function format(int $year, int $month, ?int $day = null): string
     {
         return trim(self::monthName($month).' '.($day ?? '')).' '.$year;

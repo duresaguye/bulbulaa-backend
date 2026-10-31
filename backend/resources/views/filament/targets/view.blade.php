@@ -147,7 +147,7 @@
 
         <x-filament::section :heading="__('Assignment and revisions')">
             <dl class="rt-meta">
-                <div><dt>{{ __('Assigned by') }}</dt><dd>{{ $target->assignedBy?->name ?? __('Not recorded') }}, {{ $target->created_at?->format('j M Y') }}</dd></div>
+                <div><dt>{{ __('Assigned by') }}</dt><dd>{{ $target->assignedBy?->name ?? __('Not recorded') }}, {{ $target->created_at ? \App\Services\EthiopianCalendar::display($target->created_at) : '' }}</dd></div>
                 <div><dt>{{ __('Originally assigned') }}</dt><dd>{{ $format($target->original_target_value) }} {{ $target->measurement_unit }}</dd></div>
                 <div><dt>{{ __('Current target') }}</dt><dd>{{ $format($target->target_value) }} {{ $target->measurement_unit }}</dd></div>
             </dl>
@@ -157,7 +157,7 @@
                         <li>
                             <span class="rt-strong">{{ __(':from to :to', ['from' => $format($revision->previous_value), 'to' => $format($revision->new_value)]) }}</span>
                             <span>{{ $revision->revisedBy?->name ?? __('Unknown user') }}</span>
-                            <time class="rt-muted" datetime="{{ $revision->created_at->toIso8601String() }}">{{ $revision->created_at->format('j M Y, H:i') }}</time>
+                            <time class="rt-muted" datetime="{{ $revision->created_at->toIso8601String() }}">{{ \App\Services\EthiopianCalendar::display($revision->created_at, withTime: true) }}</time>
                             <p class="rt-timeline__comment">{{ $revision->reason }}</p>
                         </li>
                     @endforeach

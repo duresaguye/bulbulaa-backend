@@ -65,6 +65,7 @@ class ReportDocument
      *     title: string,
      *     subtitle: string,
      *     filename: string,
+     *     ascii_filename: string,
      *     status: string,
      *     meta: list<array{label: string, value: string}>,
      *     results: array{heading: string, target_label: string, actual_label: string, rows: list<array{title: string, unit: string, target: string, actual: string, achievement: float|null, note: string|null}>}|null,
@@ -85,6 +86,7 @@ class ReportDocument
             'title' => $record->department->name,
             'subtitle' => $subtitle,
             'filename' => self::filename($record->department->name.' '.$record->periodLabel()),
+            'ascii_filename' => "{$type}-report-{$record->getKey()}",
             'status' => $record->status->getLabel(),
             'meta' => [
                 ['label' => __('Office'), 'value' => $record->department->name],
@@ -110,7 +112,7 @@ class ReportDocument
     /**
      * The office performance table with the same filters as on screen.
      *
-     * @return array{title: string, subtitle: string, filename: string, week_label: string, month_label: string, rows: list<array<string, mixed>>}
+     * @return array{title: string, subtitle: string, filename: string, ascii_filename: string, week_label: string, month_label: string, rows: list<array<string, mixed>>}
      */
     public static function forOfficePerformance(int $year, ?int $unit, string $status): array
     {
@@ -127,6 +129,7 @@ class ReportDocument
             'title' => __('Office performance'),
             'subtitle' => __('Year :year E.C.', ['year' => $year]).' — '.$page->statusOptions()[$page->status],
             'filename' => self::filename(__('Office performance').' '.$year),
+            'ascii_filename' => "office-performance-{$year}",
             'week_label' => __('Week :week, :month', ['week' => $week['week'], 'month' => EthiopianCalendar::monthName($week['month'])]),
             'month_label' => __(':month report', ['month' => EthiopianCalendar::monthName($month['month'])]),
             'rows' => $page->rows()->map(fn (array $row): array => [
@@ -158,21 +161,12 @@ class ReportDocument
      */
     public static function printedOn(): string
     {
-        $now = CarbonImmutable::now();
-        $today = EthiopianCalendar::fromGregorian($now);
-
-        return __('Printed :ethiopian E.C. (:gregorian)', [
-            'ethiopian' => EthiopianCalendar::format($today['year'], $today['month'], $today['day']),
-            'gregorian' => $now->format('j M Y, H:i'),
-        ]);
+        return __('Printed :date', ['date' => EthiopianCalendar::display(CarbonImmutable::now(), withTime: true)]);
     }
 
     private static function date(\DateTimeInterface $date): string
     {
-        $date = CarbonImmutable::instance($date);
-        $ethiopian = EthiopianCalendar::fromGregorian($date);
-
-        return EthiopianCalendar::format($ethiopian['year'], $ethiopian['month'], $ethiopian['day']).' ('.$date->format('j M Y').')';
+        return EthiopianCalendar::display($date);
     }
 
     /**

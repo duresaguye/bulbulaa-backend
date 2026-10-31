@@ -349,7 +349,7 @@
     "Reviewer": "Gamaaggamaa",
     "Not yet": "Ammallee miti",
     "No results recorded.": "Bu'aan hin galmoofne.",
-    "Achievement": "Raawwii",
+    "Achievement": "Sadarkaa raawwii",
     "Report": "Gabaasa",
     "Not provided": "Hin kennamne",
     "None attached": "Homtuu hin maxxanfamne",
@@ -414,9 +414,11 @@
     "Users": "Fayyadamtoota",
     "Monthly reports": "Gabaasota ji'aa",
     "monthly report": "gabaasa ji'aa",
-    "Printed :ethiopian E.C. (:gregorian)": "Kan maxxanfame :ethiopian A.L.I. (:gregorian)",
     "Print or save as PDF": "Maxxansi yookaan PDF tti olkaa'i",
     "Download Excel": "Excel buusi",
     "Download": "Buusi",
-    "Back": "Duubatti"
+    "Back": "Duubatti",
+    "Printed :date": "Kan maxxanfame :date",
+    ":person on :date: :comment": ":person :date irratti: :comment",
+    ":date E.C.": ":date A.L.I."
 }

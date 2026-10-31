@@ -113,4 +113,32 @@ class ReportExportTest extends TestCase
             ->assertSee("Maxxansi yookaan PDF tti olkaa'i")
             ->assertSee("Gabaasa ji'aa Fulbaana 2018");
     }
+
+    public function test_excel_files_are_named_in_the_persons_language_with_an_english_fallback(): void
+    {
+        $report = $this->submittedMonthlyReport();
+        $user = $this->officeHead();
+        $user->forceFill(['locale' => 'am'])->save();
+
+        $disposition = $this->actingAs($user)
+            ->get("/admin/exports/monthly/{$report->id}/excel")
+            ->headers->get('Content-Disposition');
+
+        $this->assertStringContainsString("filename=monthly-report-{$report->id}.xlsx", $disposition);
+        $this->assertStringContainsString("filename*=utf-8''".rawurlencode('sanitation-office-መስከረም-2018.xlsx'), $disposition);
+    }
+
+    public function test_printed_dates_have_no_english_month_names(): void
+    {
+        $report = $this->submittedMonthlyReport();
+        $user = $this->officeHead();
+        $user->forceFill(['locale' => 'om'])->save();
+
+        $this->actingAs($user)
+            ->get("/admin/exports/monthly/{$report->id}/print")
+            ->assertOk()
+            ->assertSee('Kan maxxanfame')
+            ->assertDontSee(now()->format('M Y'))
+            ->assertSee(now()->format('d/m/Y'));
+    }
 }

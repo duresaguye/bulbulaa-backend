@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AuditLogs\Tables;
 
 use App\Filament\Support\ReportTableParts;
+use App\Services\EthiopianCalendar;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -17,7 +18,7 @@ class AuditLogsTable
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('When'))
-                    ->dateTime('j M Y, H:i')
+                    ->formatStateUsing(fn ($state): string => EthiopianCalendar::display($state, withTime: true))
                     ->description(fn ($record): ?HtmlString => ReportTableParts::phoneDetail($record->user?->name ?? __('System')))
                     ->sortable(),
                 TextColumn::make('user.name')

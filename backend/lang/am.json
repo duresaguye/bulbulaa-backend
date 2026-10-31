@@ -414,9 +414,11 @@
     "Users": "ተጠቃሚዎች",
     "Monthly reports": "ወርሃዊ ሪፖርቶች",
     "monthly report": "ወርሃዊ ሪፖርት",
-    "Printed :ethiopian E.C. (:gregorian)": "የታተመው :ethiopian ዓ.ም. (:gregorian)",
     "Print or save as PDF": "አትም ወይም በPDF አስቀምጥ",
     "Download Excel": "Excel አውርድ",
     "Download": "አውርድ",
-    "Back": "ተመለስ"
+    "Back": "ተመለስ",
+    "Printed :date": "የታተመው :date",
+    ":person on :date: :comment": ":person በ:date፦ :comment",
+    ":date E.C.": ":date ዓ.ም."
 }

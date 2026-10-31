@@ -19,5 +19,10 @@ Route::get('/admin/language/{locale}', function (Request $request, string $local
         $user->forceFill(['locale' => $locale])->save();
     }
 
-    return redirect()->back(fallback: '/admin');
+    /** Return to the page the person was on, but never to a download (that would start the download again). */
+    $previous = (string) $request->headers->get('referer');
+    $sameSite = str_starts_with($previous, $request->getSchemeAndHttpHost().'/');
+    $isDownload = str_contains(parse_url($previous, PHP_URL_PATH) ?? '', '/admin/exports/');
+
+    return redirect($sameSite && ! $isDownload ? $previous : '/admin');
 })->name('admin.language');

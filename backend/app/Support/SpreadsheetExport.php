@@ -5,6 +5,7 @@ namespace App\Support;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\Style;
 use OpenSpout\Writer\XLSX\Writer;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -17,7 +18,7 @@ class SpreadsheetExport
      */
     public static function report(array $document): StreamedResponse
     {
-        return self::stream($document['filename'], function (Writer $writer) use ($document): void {
+        return self::stream($document['filename'], $document['ascii_filename'], function (Writer $writer) use ($document): void {
             $bold = (new Style)->setFontBold();
             $sheet = $writer->getCurrentSheet();
             $sheet->setName(self::sheetName(__('Report')));
@@ -76,7 +77,7 @@ class SpreadsheetExport
      */
     public static function officePerformance(array $document): StreamedResponse
     {
-        return self::stream($document['filename'], function (Writer $writer) use ($document): void {
+        return self::stream($document['filename'], $document['ascii_filename'], function (Writer $writer) use ($document): void {
             $bold = (new Style)->setFontBold();
             $sheet = $writer->getCurrentSheet();
             $sheet->setName(self::sheetName(__('Offices')));
@@ -125,16 +126,27 @@ class SpreadsheetExport
     }
 
     /**
+     * The file is named in the person's language; an English name is sent alongside for programs that cannot read
+     * Ethiopic or accented file names (otherwise an Amharic download could be saved as just "download").
+     *
      * @param  callable(Writer): void  $fill
      */
-    private static function stream(string $filename, callable $fill): StreamedResponse
+    private static function stream(string $filename, string $asciiFilename, callable $fill): StreamedResponse
     {
-        return response()->streamDownload(function () use ($fill): void {
+        $response = new StreamedResponse(function () use ($fill): void {
             $writer = new Writer;
             $writer->openToFile('php://output');
             $fill($writer);
             $writer->close();
-        }, $filename.'.xlsx', ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+        }, 200, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+
+        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $filename.'.xlsx',
+            $asciiFilename.'.xlsx',
+        ));
+
+        return $response;
     }
 
     /**

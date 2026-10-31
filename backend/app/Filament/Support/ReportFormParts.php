@@ -3,6 +3,7 @@
 namespace App\Filament\Support;
 
 use App\Enums\ReportStatus;
+use App\Services\EthiopianCalendar;
 use Filament\Schemas\Components\Callout;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +22,11 @@ class ReportFormParts
                     return '';
                 }
 
-                return trim(($review->user?->name ?? __('The reviewer')).' on '.$review->created_at->format('j M Y').': '.$review->comment);
+                return __(':person on :date: :comment', [
+                    'person' => $review->user?->name ?? __('The reviewer'),
+                    'date' => EthiopianCalendar::display($review->created_at),
+                    'comment' => $review->comment,
+                ]);
             })
             ->danger()
             ->visible(fn (?Model $record): bool => $record?->status === ReportStatus::Returned)
