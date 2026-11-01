@@ -74,7 +74,7 @@ return [
     ],
 
     'seed_admin' => [
-        'name' => env('ADMIN_NAME', 'Reven Town Administrator'),
+        'name' => env('ADMIN_NAME', 'Bulbulaa Administrator'),
         'email' => env('ADMIN_EMAIL'),
         'password' => env('ADMIN_PASSWORD'),
     ],

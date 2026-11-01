@@ -28,6 +28,29 @@ class AdminBrandingTest extends TestCase
             ->assertSee('For Bulbulaa administration staff.');
     }
 
+    public function test_the_sign_in_page_shows_the_photo_of_central_bulbulaa(): void
+    {
+        config(['app.town_name' => 'Bulbulaa']);
+
+        $this->get('/admin/login')
+            ->assertOk()
+            ->assertSee('rt-login-photo', false)
+            ->assertSee('images/bulbulaa-centre.jpg', false)
+            ->assertDontSee('Reven');
+
+        $this->assertFileExists(public_path('images/bulbulaa-centre.jpg'));
+    }
+
+    public function test_signed_in_pages_do_not_show_the_sign_in_photo(): void
+    {
+        $this->buildOrganization();
+
+        $this->actingAs($this->cityPlanner())
+            ->get('/admin')
+            ->assertOk()
+            ->assertDontSee('rt-login-photo', false);
+    }
+
     public function test_avatars_are_drawn_locally_from_initials(): void
     {
         $user = User::factory()->make(['name' => 'Chaltu Abdi Gemechu']);
