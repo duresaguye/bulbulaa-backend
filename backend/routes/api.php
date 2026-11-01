@@ -15,6 +15,10 @@ Route::prefix('public')->middleware('throttle:120,1')->group(function (): void {
     Route::get('tourism-places', [PublicContentController::class, 'tourismPlaces'])->name('api.public.tourism-places.index');
     Route::get('documents', [PublicContentController::class, 'documents'])->name('api.public.documents.index');
     Route::get('alerts', [PublicContentController::class, 'alerts'])->name('api.public.alerts.index');
+    Route::get('settings', [PublicContentController::class, 'settings'])->name('api.public.settings');
+    Route::get('investment-sectors', [PublicContentController::class, 'investmentSectors'])->name('api.public.investment-sectors.index');
+    Route::get('about-sections', [PublicContentController::class, 'aboutSections'])->name('api.public.about-sections.index');
+    Route::get('offices', [PublicContentController::class, 'offices'])->name('api.public.offices.index');
 });
 
 /** Messages and reports from the public. Strict limits: a few per minute and per day from one connection. */
