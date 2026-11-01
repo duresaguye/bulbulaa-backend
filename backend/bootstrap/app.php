@@ -13,7 +13,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Behind a hosting proxy that ends HTTPS (Render, a load balancer), trust it so links and assets stay https.
+        // TRUSTED_PROXIES is "*" or a comma-separated list of addresses; leave it unset when nothing sits in front.
+        $proxies = env('TRUSTED_PROXIES');
+
+        if (filled($proxies)) {
+            $middleware->trustProxies(at: $proxies === '*' ? '*' : array_map('trim', explode(',', $proxies)));
+        }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

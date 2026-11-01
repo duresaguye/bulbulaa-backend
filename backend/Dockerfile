@@ -19,8 +19,9 @@ RUN npm run build
 FROM php:8.4-fpm-bookworm AS runtime
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libicu-dev libonig-dev libzip-dev \
-    && docker-php-ext-install bcmath intl mbstring opcache pdo_mysql zip \
+    && apt-get install -y --no-install-recommends libicu-dev libonig-dev libzip-dev libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
+    && docker-php-ext-install bcmath exif gd intl mbstring opcache pdo_mysql zip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
