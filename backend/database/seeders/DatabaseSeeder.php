@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
 
     private function seedSystemAdministrator(): void
     {
-        $name = config('auth.seed_admin.name') ?: 'Reven Town Administrator';
+        $name = config('auth.seed_admin.name') ?: 'Bulbulaa Administrator';
         $email = config('auth.seed_admin.email');
         $password = config('auth.seed_admin.password');
 

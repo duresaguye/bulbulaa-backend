@@ -36,6 +36,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->renderHook(
+                PanelsRenderHook::SIMPLE_LAYOUT_START,
+                fn (): string => auth()->check() ? '' : view('filament.components.login-photo')->render(),
+            )
+            ->renderHook(
                 PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
                 fn (): string => view('filament.components.login-introduction')->render(),
             )
