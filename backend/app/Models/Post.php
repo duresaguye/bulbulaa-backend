@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PostType;
+use App\Models\Concerns\HasTranslations;
 use App\Models\Concerns\RecordsAudit;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -21,6 +22,7 @@ class Post extends Model
     /** @use HasFactory<PostFactory> */
     use HasFactory;
 
+    use HasTranslations;
     use RecordsAudit;
 
     public const LOCALES = ['om', 'am', 'en'];
@@ -57,26 +59,6 @@ class Post extends Model
     public function isScheduled(): bool
     {
         return $this->published_at !== null && $this->published_at->isFuture();
-    }
-
-    /**
-     * One field in one language, falling back to Afaan Oromoo, then to any language that has text.
-     */
-    public function translated(string $field, string $locale): ?string
-    {
-        $values = $this->{$field} ?? [];
-
-        return collect([$locale, self::DEFAULT_LOCALE, ...self::LOCALES])
-            ->map(fn (string $code): ?string => filled($values[$code] ?? null) ? $values[$code] : null)
-            ->first(fn (?string $value): bool => $value !== null);
-    }
-
-    /**
-     * @return array{om: string|null, am: string|null, en: string|null}
-     */
-    public function allTranslations(string $field): array
-    {
-        return collect(self::LOCALES)->mapWithKeys(fn (string $code): array => [$code => $this->translated($field, $code)])->all();
     }
 
     public function creator(): BelongsTo

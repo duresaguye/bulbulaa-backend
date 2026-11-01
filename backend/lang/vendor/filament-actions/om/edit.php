@@ -6,7 +6,7 @@ return [
     'single' => [
         'label' => 'Gulaali',
         'modal' => [
-            'heading' => ':label gulaali',
+            'heading' => ':Label gulaali',
             'actions' => [
                 'save' => [
                     'label' => 'Jijjiirama olkaa\'i',

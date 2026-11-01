@@ -2,25 +2,35 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AlertLevel;
 use App\Enums\CitizenReportStatus;
+use App\Enums\DocumentCategory;
 use App\Enums\PostType;
+use App\Enums\ProjectStatus;
 use App\Enums\ReportCategory;
 use App\Enums\ReportStatus;
 use App\Enums\ReviewAction;
+use App\Enums\ServiceAvailability;
+use App\Models\Alert;
 use App\Models\AnnualTarget;
 use App\Models\CitizenReport;
 use App\Models\Department;
+use App\Models\Document;
 use App\Models\MonthlyPlan;
 use App\Models\MonthlyReport;
 use App\Models\Post;
+use App\Models\Project;
 use App\Models\ReportReview;
 use App\Models\Role;
+use App\Models\Service;
+use App\Models\TourismPlace;
 use App\Models\User;
 use App\Models\WeeklyProgressReport;
 use App\Services\EthiopianCalendar;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
 /**
@@ -51,6 +61,7 @@ class DemoSeeder extends Seeder
         $users = $this->users($offices);
         $targets = $this->targets($offices, $year);
         $this->posts();
+        $this->websiteContent();
         $this->citizenReports($offices);
 
         // Reports for every completed month and week so far this year.
@@ -324,6 +335,118 @@ class DemoSeeder extends Seeder
         $review->created_at = $at;
         $review->updated_at = $at;
         $review->save();
+    }
+
+    /**
+     * Fictional projects, services, places, documents and an alert, so every website section has something to show.
+     */
+    private function websiteContent(): void
+    {
+        $projects = [
+            ['slug' => 'demo-market-hall', 'status' => ProjectStatus::Ongoing,
+                'title' => ['om' => 'Galma gabaa haaraa', 'am' => 'አዲስ የገበያ አዳራሽ', 'en' => 'New market hall'],
+                'category' => ['om' => 'Daldala', 'am' => 'ንግድ', 'en' => 'Trade'],
+                'summary' => ['om' => 'Galma gabaa daldaltoota 120 qabatu ijaaramaa jira.', 'am' => '120 ነጋዴዎችን የሚይዝ የገበያ አዳራሽ እየተገነባ ነው።', 'en' => 'A covered market hall for 120 traders is being built.']],
+            ['slug' => 'demo-street-lights', 'status' => ProjectStatus::Completed,
+                'title' => ['om' => 'Ibsaa daandii aduu', 'am' => 'የፀሐይ የመንገድ መብራት', 'en' => 'Solar street lights'],
+                'category' => ['om' => 'Ibsaa', 'am' => 'መብራት', 'en' => 'Electricity'],
+                'summary' => ['om' => 'Ibsaan daandii aduun hojjetu 60 daandii ijoo irratti dhaabbateera.', 'am' => '60 በፀሐይ የሚሠሩ መብራቶች በዋና መንገዶች ላይ ተተክለዋል።', 'en' => 'Sixty solar street lights now light the main roads.']],
+            ['slug' => 'demo-river-park', 'status' => ProjectStatus::Planned,
+                'title' => ['om' => 'Paarkii qarqara lagaa', 'am' => 'የወንዝ ዳር መናፈሻ', 'en' => 'Riverside park'],
+                'category' => ['om' => 'Uumama', 'am' => 'ተፈጥሮ', 'en' => 'Environment'],
+                'summary' => ['om' => 'Qarqara Lagaa Bulbulaa irratti paarkiin bashannanaa karoorfameera.', 'am' => 'በቡልቡላ ወንዝ ዳር የመዝናኛ መናፈሻ ታቅዷል።', 'en' => 'A public park is planned along the Bulbula River.']],
+        ];
+
+        foreach ($projects as $order => $project) {
+            Project::updateOrCreate(['slug' => $project['slug']], [
+                ...$project,
+                'body' => ['om' => '<p>'.$project['summary']['om'].'</p><p>Odeeffannoo fakkeenyaa: hin mirkanoofne.</p>', 'am' => null, 'en' => '<p>'.$project['summary']['en'].'</p><p>Sample content, not verified.</p>'],
+                'sort_order' => $order + 1,
+                'is_published' => true,
+            ]);
+        }
+
+        $services = [
+            ['icon' => 'Briefcase', 'availability' => ServiceAvailability::Available,
+                'title' => ['om' => 'Hayyama daldalaa haaromsuu', 'am' => 'የንግድ ፈቃድ እድሳት', 'en' => 'Business licence renewal'],
+                'description' => ['om' => 'Hayyama daldalaa wiirtuu tajaajila iddoo tokkootti haaromsaa.', 'am' => 'የንግድ ፈቃድዎን በአንድ መስኮት አገልግሎት ማዕከል ያድሱ።', 'en' => 'Renew your business licence at the one-stop service centre.']],
+            ['icon' => 'Droplets', 'availability' => ServiceAvailability::InPreparation,
+                'title' => ['om' => 'Kaffaltii bishaanii', 'am' => 'የውሃ ክፍያ', 'en' => 'Water bill payment'],
+                'description' => ['om' => 'Kaffaltii bishaanii bilbilaan kaffaluu.', 'am' => 'የውሃ ክፍያን በስልክ መክፈል።', 'en' => 'Pay your water bill by phone.']],
+            ['icon' => 'Trash2', 'availability' => ServiceAvailability::ComingSoon,
+                'title' => ['om' => 'Sagantaa walitti qabiinsa kosii', 'am' => 'የቆሻሻ አሰባሰብ መርሐ ግብር', 'en' => 'Waste collection schedule'],
+                'description' => ['om' => 'Guyyaa kosiin naannoo keessan irraa walitti qabamu beekaa.', 'am' => 'በአካባቢዎ ቆሻሻ የሚሰበሰብበትን ቀን ይወቁ።', 'en' => 'See which day waste is collected in your area.']],
+        ];
+
+        foreach ($services as $order => $service) {
+            Service::updateOrCreate(['icon' => $service['icon'], 'title->en' => $service['title']['en']], [...$service, 'sort_order' => $order + 1, 'is_published' => true]);
+        }
+
+        $places = [
+            ['name' => ['om' => 'Haroo Langaanoo', 'am' => 'ላንጋኖ ሐይቅ', 'en' => 'Lake Langano'], 'kind' => ['om' => 'Haroo', 'am' => 'ሐይቅ', 'en' => 'Lake'],
+                'description' => ['om' => 'Haroo bashannanaa fi boqonnaaf beekamu.', 'am' => 'ለመዝናኛና ለእረፍት የሚታወቅ ሐይቅ።', 'en' => 'A lake known for recreation and rest.']],
+            ['name' => ['om' => 'Lagaa Bulbulaa', 'am' => 'የቡልቡላ ወንዝ', 'en' => 'Bulbula River'], 'kind' => ['om' => 'Laga', 'am' => 'ወንዝ', 'en' => 'River'],
+                'description' => ['om' => 'Lagni magaalattii keessa dabru.', 'am' => 'ከተማዋን የሚያቋርጥ ወንዝ።', 'en' => 'The river that runs through the city.']],
+        ];
+
+        foreach ($places as $order => $place) {
+            TourismPlace::updateOrCreate(['name->en' => $place['name']['en']], [...$place, 'sort_order' => $order + 1, 'is_published' => true]);
+        }
+
+        $documents = [
+            ['category' => DocumentCategory::Form, 'file' => 'documents/demo-business-licence-form.pdf',
+                'title' => ['om' => 'Unka iyyannoo hayyama daldalaa', 'am' => 'የንግድ ፈቃድ ማመልከቻ ቅጽ', 'en' => 'Business licence application form'],
+                'description' => ['om' => 'Unka fakkeenyaa: hin mirkanoofne.', 'am' => 'የናሙና ቅጽ፤ አልተረጋገጠም።', 'en' => 'Sample form, not verified.']],
+            ['category' => DocumentCategory::Report, 'file' => 'documents/demo-annual-summary.pdf',
+                'title' => ['om' => 'Cuunfaa raawwii waggaa', 'am' => 'የዓመቱ አፈጻጸም ማጠቃለያ', 'en' => 'Annual performance summary'],
+                'description' => ['om' => 'Gabaasa fakkeenyaa: hin mirkanoofne.', 'am' => 'የናሙና ሪፖርት፤ አልተረጋገጠም።', 'en' => 'Sample report, not verified.']],
+        ];
+
+        foreach ($documents as $document) {
+            Storage::disk(Document::DISK)->put($document['file'], $this->samplePdf($document['title']['en']));
+            Document::updateOrCreate(['file' => $document['file']], [...$document, 'file_name' => basename($document['file']), 'published_at' => now()->subDays(2)]);
+        }
+
+        Alert::updateOrCreate(['link_url' => '/news/demo-water-interruption'], [
+            'message' => [
+                'om' => "Fakkeenya: Guyyaa Sanbataa ganama naannoo 02 keessatti bishaan sa'aatii muraasaaf ni dhaabata.",
+                'am' => 'ናሙና፦ ቅዳሜ ጠዋት በቀበሌ 02 ውሃ ለጥቂት ሰዓታት ይቋረጣል።',
+                'en' => 'Sample: water will be off for a few hours in kebele 02 on Saturday morning.',
+            ],
+            'link_label' => ['om' => 'Dabalata dubbisi', 'am' => 'ተጨማሪ ያንብቡ', 'en' => 'Read more'],
+            'level' => AlertLevel::Warning,
+            'ends_at' => now()->addDays(5),
+            'is_active' => true,
+        ]);
+    }
+
+    /** A one-page PDF with a title, so demo downloads open. */
+    private function samplePdf(string $title): string
+    {
+        $text = str_replace(['\\', '(', ')'], ['\\\\', '\(', '\)'], $title.' - sample document');
+        $stream = "BT /F1 18 Tf 72 720 Td ({$text}) Tj ET";
+        $objects = [
+            '<< /Type /Catalog /Pages 2 0 R >>',
+            '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+            '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+            '<< /Length '.strlen($stream)." >>\nstream\n{$stream}\nendstream",
+            '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+        ];
+
+        $pdf = "%PDF-1.4\n";
+        $offsets = [];
+        foreach ($objects as $index => $object) {
+            $offsets[] = strlen($pdf);
+            $pdf .= ($index + 1)." 0 obj\n{$object}\nendobj\n";
+        }
+
+        $xref = strlen($pdf);
+        $pdf .= 'xref'."\n0 ".(count($objects) + 1)."\n0000000000 65535 f \n";
+        foreach ($offsets as $offset) {
+            $pdf .= sprintf("%010d 00000 n \n", $offset);
+        }
+
+        return $pdf.'trailer << /Size '.(count($objects) + 1)." /Root 1 0 R >>\nstartxref\n{$xref}\n%%EOF\n";
     }
 
     /**

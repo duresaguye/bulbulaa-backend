@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\WeeklyProgressReport;
 use Database\Seeders\DemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use RuntimeException;
 use Tests\Concerns\BuildsOrganization;
@@ -89,11 +90,21 @@ class AdminBrandingTest extends TestCase
 
     public function test_the_demo_seeder_builds_a_year_of_fictional_reports(): void
     {
+        Storage::fake('public');
+
         $this->seed(DemoSeeder::class);
 
         $this->assertSame(10, AnnualTarget::where('description', 'Fictional demonstration target.')->count());
         $this->assertTrue(WeeklyProgressReport::exists());
         $this->assertTrue(User::where('email', 'admin@demo.test')->exists());
+
+        $this->getJson('/api/public/projects')->assertOk()->assertJsonCount(3, 'data');
+        $this->getJson('/api/public/services')->assertOk()->assertJsonCount(3, 'data');
+        $this->getJson('/api/public/tourism-places')->assertOk()->assertJsonCount(2, 'data');
+        $this->getJson('/api/public/alerts')->assertOk()->assertJsonCount(1, 'data');
+        $this->getJson('/api/public/documents')->assertOk()->assertJsonCount(2, 'data');
+        Storage::disk('public')->assertExists('documents/demo-business-licence-form.pdf');
+        $this->assertStringStartsWith('%PDF-1.4', Storage::disk('public')->get('documents/demo-business-licence-form.pdf'));
     }
 
     public function test_the_demo_seeder_refuses_to_run_in_production(): void
