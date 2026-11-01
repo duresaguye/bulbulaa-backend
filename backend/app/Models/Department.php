@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasTranslations;
 use App\Models\Concerns\RecordsAudit;
 use Database\Factories\DepartmentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -13,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 
-#[Fillable(['parent_id', 'name', 'code', 'description', 'is_active'])]
+#[Fillable(['parent_id', 'name', 'code', 'description', 'is_active', 'is_public', 'public_name', 'public_description', 'public_location', 'public_phone', 'public_email'])]
 class Department extends Model
 {
     /** @use HasFactory<DepartmentFactory> */
-    use HasFactory, RecordsAudit;
+    use HasFactory, HasTranslations, RecordsAudit;
 
     protected static function booted(): void
     {
@@ -131,6 +132,10 @@ class Department extends Model
     {
         return [
             'is_active' => 'boolean',
+            'is_public' => 'boolean',
+            'public_name' => 'array',
+            'public_description' => 'array',
+            'public_location' => 'array',
         ];
     }
 }

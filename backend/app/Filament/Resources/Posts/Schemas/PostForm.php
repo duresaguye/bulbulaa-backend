@@ -76,7 +76,7 @@ class PostForm
                                     ->label(__('Cover photo'))
                                     ->image()
                                     ->imageEditor()
-                                    ->imageAspectRatio('16:9')
+                                    ->imageCropAspectRatio('16:9')
                                     ->disk('public')
                                     ->directory('posts/covers')
                                     ->visibility('public')

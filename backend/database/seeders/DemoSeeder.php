@@ -407,6 +407,29 @@ class DemoSeeder extends Seeder
             Document::updateOrCreate(['file' => $document['file']], [...$document, 'file_name' => basename($document['file']), 'published_at' => now()->subDays(2)]);
         }
 
+        $directory = [
+            'WAT' => ['name' => ['om' => 'Waajjira Bishaanii fi Dhangala\'aa', 'am' => 'የውሃና ፍሳሽ ጽሕፈት ቤት', 'en' => 'Water and Sewerage Office'],
+                'description' => ['om' => 'Hidhata bishaanii haaraa, kaffaltii fi komii bishaanii.', 'am' => 'አዲስ የውሃ ቆጣሪ፣ ክፍያና የውሃ ቅሬታዎች።', 'en' => 'New water connections, bills and water complaints.'],
+                'phone' => '+251 22 XXX 0101', 'email' => 'water@demo.test'],
+            'REV' => ['name' => ['om' => 'Waajjira Galiiwwanii', 'am' => 'የገቢዎች ጽሕፈት ቤት', 'en' => 'Revenue Office'],
+                'description' => ['om' => 'Gibira, kaffaltii fi ragaa kaffaltii.', 'am' => 'ግብር፣ ክፍያና የክፍያ ማስረጃ።', 'en' => 'Taxes, payments and payment receipts.'],
+                'phone' => '+251 22 XXX 0102', 'email' => 'revenue@demo.test'],
+            'TRD' => ['name' => ['om' => 'Waajjira Daldalaa fi Invastimantii', 'am' => 'የንግድና ኢንቨስትመንት ጽሕፈት ቤት', 'en' => 'Trade and Investment Office'],
+                'description' => ['om' => 'Hayyama daldalaa fi gorsa invastaroota haaraa.', 'am' => 'የንግድ ፈቃድና ለአዳዲስ ባለሀብቶች ምክር።', 'en' => 'Business licences and advice for new investors.'],
+                'phone' => '+251 22 XXX 0103', 'email' => 'trade@demo.test'],
+        ];
+
+        foreach ($directory as $code => $details) {
+            Department::where('code', $code)->update([
+                'is_public' => true,
+                'public_name' => json_encode($details['name'], JSON_UNESCAPED_UNICODE),
+                'public_description' => json_encode($details['description'], JSON_UNESCAPED_UNICODE),
+                'public_location' => json_encode(['om' => 'Gamoo bulchiinsa magaalaa (fakkeenya)', 'am' => 'የከተማ አስተዳደር ሕንፃ (ናሙና)', 'en' => 'City administration building (sample)'], JSON_UNESCAPED_UNICODE),
+                'public_phone' => $details['phone'],
+                'public_email' => $details['email'],
+            ]);
+        }
+
         Alert::updateOrCreate(['link_url' => '/news/demo-water-interruption'], [
             'message' => [
                 'om' => "Fakkeenya: Guyyaa Sanbataa ganama naannoo 02 keessatti bishaan sa'aatii muraasaaf ni dhaabata.",
