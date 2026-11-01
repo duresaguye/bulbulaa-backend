@@ -4,9 +4,9 @@
 
 return [
     'single' => [
-        'label' => ':label haaraa',
+        'label' => ':Label haaraa',
         'modal' => [
-            'heading' => ':label uumi',
+            'heading' => ':Label uumi',
             'actions' => [
                 'create' => [
                     'label' => 'Uumi',

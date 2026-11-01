@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\Posts\Schemas;
 
 use App\Enums\PostType;
+use App\Filament\Support\ArticleEditor;
 use App\Models\Post;
 use App\Support\Locales;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -117,15 +117,9 @@ class PostForm
                     ->rows(3)
                     ->maxLength(400)
                     ->helperText(__('One or two sentences shown in lists and when the post is shared.')),
-                RichEditor::make("body.{$locale}")
+                ArticleEditor::make("body.{$locale}")
                     ->label(__('Full text'))
-                    ->fileAttachments(false)
-                    ->toolbarButtons([
-                        ['bold', 'italic', 'underline', 'link'],
-                        ['h2', 'h3'],
-                        ['bulletList', 'orderedList', 'blockquote'],
-                        ['undo', 'redo'],
-                    ]),
+                    ->helperText(__('Add photos, tables, questions and answers, or a YouTube video with the buttons above.')),
             ])
             ->extraAttributes(['lang' => $locale]);
     }
