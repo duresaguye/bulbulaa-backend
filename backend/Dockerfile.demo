@@ -1,0 +1,53 @@
+# A single-container demo of the Bulbulaa admin for free hosts such as Render.
+# It runs on SQLite and loads the fictional demo data every time it starts, so each start is a clean demo.
+# Not for real use: nothing is kept between restarts. Production uses the Dockerfile next to this one.
+
+FROM composer:2 AS vendor
+
+WORKDIR /app
+
+COPY composer.json composer.lock ./
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts --ignore-platform-reqs
+
+FROM node:22-alpine AS assets
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+COPY --from=vendor /app/vendor ./vendor
+COPY . .
+RUN npm run build
+
+FROM php:8.4-cli-bookworm
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libicu-dev libonig-dev libzip-dev libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
+    && docker-php-ext-install bcmath exif gd intl mbstring opcache zip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html
+
+COPY --from=vendor /app/vendor ./vendor
+COPY . .
+COPY --from=assets /app/public/build ./public/build
+COPY docker/demo-entrypoint.sh /usr/local/bin/demo-entrypoint
+
+RUN chmod +x /usr/local/bin/demo-entrypoint \
+    && rm -f .env public/storage \
+    && mkdir -p storage/app/public storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache database \
+    && php artisan package:discover --ansi
+
+ENV APP_ENV=demo \
+    APP_DEBUG=false \
+    DB_CONNECTION=sqlite \
+    DB_DATABASE=/var/www/html/database/demo.sqlite \
+    LOG_CHANNEL=stderr \
+    TRUSTED_PROXIES=* \
+    PHP_CLI_SERVER_WORKERS=4
+
+EXPOSE 10000
+
+CMD ["demo-entrypoint"]

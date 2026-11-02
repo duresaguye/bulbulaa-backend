@@ -1,0 +1,17 @@
+# Render Blueprint for a free demo of the Bulbulaa admin and public API.
+# The demo resets to fictional data on every start (and Render's free plan restarts it after 15 idle minutes).
+# Sign in at /admin as admin@demo.test with the password demo-password.
+services:
+  - type: web
+    name: bulbulaa-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile.demo
+    dockerContext: ./backend
+    healthCheckPath: /up
+    autoDeploy: true
+    envVars:
+      - key: TOWN_NAME
+        value: Bulbulaa
+      - key: APP_LOCALE
+        value: om
