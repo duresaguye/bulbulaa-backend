@@ -6,7 +6,7 @@ return [
     'single' => [
         'label' => 'Haqi',
         'modal' => [
-            'heading' => ':label haqi',
+            'heading' => ':Label haqi',
             'actions' => [
                 'delete' => [
                     'label' => 'Haqi',

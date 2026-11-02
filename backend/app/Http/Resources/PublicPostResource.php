@@ -37,7 +37,7 @@ class PublicPostResource extends JsonResource
             'title' => $this->allTranslations('title'),
             'excerpt' => $this->allTranslations('excerpt'),
             'body' => $this->when($withBody, fn (): array => collect($this->allTranslations('body'))
-                ->map(fn (?string $html): ?string => PostHtml::clean($html))
+                ->map(fn (?string $html): ?string => PostHtml::render($html))
                 ->all()),
             'cover_image_url' => $this->cover_image ? Storage::disk('public')->url($this->cover_image) : null,
             'attachment_url' => $this->attachment ? Storage::disk('public')->url($this->attachment) : null,

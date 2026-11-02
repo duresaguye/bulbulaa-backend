@@ -1,0 +1,425 @@
+{
+  "mayor": {
+    "name": "Obbo Huseen Dekabi",
+    "title": {
+      "om": "Kantiibaa Magaalaa Bulbulaa, Godina Shawaa Bahaatti",
+      "am": "የቡልቡላ ከተማ ከንቲባ፣ ምስራቅ ሸዋ ዞን",
+      "en": "Mayor of Bulbulaa City, East Shewa Zone"
+    },
+    "quote": {
+      "om": "Imala ni eegalle, malee hin goolabne.",
+      "am": "ጉዞውን ጀምረናል፤ ገና አልጨረስንም።",
+      "en": "We have started the journey, but we have not reached the end."
+    },
+    "excerpt": {
+      "om": "Magaalaa teenya ammayyooftuu, daraan mijooftuu taate caalmatti uumnee, kenna tajaajila ummata keenyaa guddisuuf itti fufnee hojjechaa jirra.",
+      "am": "ከተማችንን ይበልጥ ዘመናዊና ምቹ ለማድረግ፣ ለህዝባችን የምንሰጠውን አገልግሎት ለማሳደግ ተግተን እየሰራን እንገኛለን።",
+      "en": "We continue working to make our city more modern and comfortable, and to expand the services we provide to our people."
+    },
+    "message": {
+      "om": "Magaalaa teenya Ammayyooftuu, Daraan Mijooftuu taate caalmatti uumnee, kenna Tajaajila ummata Keenyaa guddisnee, magaalaa jiddu gala Investimentii fi infrastraakcharaa taatee akka mul'attuuf Karoora xiiqii eegalle milkeessuuf ammas cimnee kan itti adeemnu ta'uu isaa hawaasa keenyaaf mirkaneessuu barbaada. Imala ni eegalle, malee hin goolabne. Waliin hojjennee, waliin guddannee magaalaa Bulbulaa kan boruu, magaalaa dijitaalaa fi ammayyaa taate ijaaruuf hojii keenya itti fufna.",
+      "am": "ከተማችንን ይበልጥ ዘመናዊና ምቹ ለማድረግ፣ ለህዝባችን የምንሰጠውን አገልግሎት አሳድገን፣ ከተማዋ የኢንቨስትመንትና የመሠረተ ልማት ማዕከል ሆና እንድትታይ የጀመርነውን ትልቅ እቅድ ለማሳካት አሁንም በጽናት እየሰራን መሆኑን ለማህበረሰባችን ማረጋገጥ እፈልጋለሁ። ጉዞውን ጀምረናል፤ ገና አልጨረስንም። በጋራ በመስራት፣ በጋራ በማደግ፣ የነገዋን ዲጂታልና ዘመናዊ ቡልቡላ ከተማ ለመገንባት ስራችንን እንቀጥላለን።",
+      "en": "I want to assure our community that we are working with renewed determination to make our city more modern and comfortable, to expand the services we provide to our people, and to achieve the ambitious plan we began — for our city to stand as a center of investment and infrastructure. We have started the journey, but we have not reached the end. Working together, growing together, we continue our work to build the Bulbulaa of tomorrow — a digital and modern city."
+    },
+    "photo": null
+  },
+  "contact": {
+    "phone": null,
+    "email": null,
+    "address": {
+      "om": "Bulbulaa, Aanaa Adaamii Tulluu Jiddoo Kombolchaa, Godina Shawaa Bahaa",
+      "am": "ቡልቡላ፣ አዳሚ ቱሉ ጅዶ ቆምቦልቻ ወረዳ፣ ምስራቅ ሸዋ ዞን",
+      "en": "Bulbulaa, Adami Tullu Jido Kombolcha, East Shewa Zone"
+    },
+    "facebook": "https://web.facebook.com/profile.php?id=61578435481872",
+    "telegram": null,
+    "youtube": null,
+    "x": null
+  },
+  "home": {
+    "hero_image": null,
+    "title": {
+      "om": "Baga Nagaan Gara Magaalaa Bulbulaa Dhuftan",
+      "am": "እንኳን ወደ ቡልቡላ ከተማ በደህና መጡ",
+      "en": "Welcome to Bulbulaa City"
+    },
+    "subtitle": {
+      "om": "Magaalaa Ammayyaa, Mijooftuu fi Carraa Hedduu Qabdu",
+      "am": "ዘመናዊ፣ ምቹና በርካታ እድሎች ያሏት ከተማ",
+      "en": "A Modern, Comfortable City with Abundant Opportunity"
+    },
+    "caption": {
+      "om": "Gidduu magaalaa Bulbulaa, Godina Shawaa Bahaa, Oromiyaa",
+      "am": "የቡልቡላ ከተማ መሀል፣ ምስራቅ ሸዋ ዞን፣ ኦሮሚያ",
+      "en": "Central Bulbulaa, East Shewa Zone, Oromia"
+    }
+  },
+  "city": {
+    "facts": [
+      {
+        "value": "180 KM",
+        "label": {
+          "om": "Finfinnee irraa",
+          "am": "ከፊንፊኔ",
+          "en": "From Finfinnee"
+        }
+      },
+      {
+        "value": "Sululaa Guddaa",
+        "label": {
+          "om": "Great Rift Valley",
+          "am": "ታላቁ የስምጥ ሸለቆ",
+          "en": "Great Rift Valley"
+        }
+      },
+      {
+        "value": "Harooleen",
+        "label": {
+          "om": "Langaanoo • Abijataa • Shaallaa",
+          "am": "ላንጋኖ • አቢጃታ • ሻላ",
+          "en": "Langano • Abijata • Shalla"
+        }
+      },
+      {
+        "value": "Qonnaa",
+        "label": {
+          "om": "Madda Oomishaa Guddaa",
+          "am": "ትልቅ የምርት ምንጭ",
+          "en": "Major Production Source"
+        }
+      },
+      {
+        "value": "Industirii",
+        "label": {
+          "om": "Bulbula IAIP",
+          "am": "ቡልቡላ IAIP",
+          "en": "Bulbula IAIP"
+        }
+      }
+    ],
+    "points": [
+      {
+        "text": {
+          "om": "Godina Shawaa Bahaa, Aanaa Adaamii Tulluu Jiddoo Kombolchaa keessatti argamti.",
+          "am": "በምስራቅ ሸዋ ዞን፣ አዳሚ ቱሉ ጅዶ ቆምቦልቻ ወረዳ ውስጥ ትገኛለች።",
+          "en": "Located in East Shewa Zone, in the Adami Tullu Jido Kombolcha area."
+        }
+      },
+      {
+        "text": {
+          "om": "Naannoo Km 180 karaa kibba-bahaa Finfinnee irraa fagaatti argamti.",
+          "am": "ከፊንፊኔ በደቡብ ምስራቅ አቅጣጫ በግምት 180 ኪ.ሜ ርቀት ላይ ትገኛለች።",
+          "en": "Located approximately 180 km southeast of Finfinnee (Addis Ababa)."
+        }
+      },
+      {
+        "text": {
+          "om": "Sululaa Guddaa (Great Rift Valley) keessatti argamti.",
+          "am": "በታላቁ የስምጥ ሸለቆ ውስጥ ትገኛለች።",
+          "en": "Situated within the Great Rift Valley."
+        }
+      },
+      {
+        "text": {
+          "om": "Harroolee gurguddoo — Langaanoo, Abijataa fi Shaallaan ni marsiti.",
+          "am": "በላንጋኖ፣ አቢጃታና ሻላ ትላልቅ ሀይቆች የተከበበች ናት።",
+          "en": "Surrounded by the major lakes of Langano, Abijata and Shalla."
+        }
+      },
+      {
+        "text": {
+          "om": "Lagni Bulbulaa magaalattii keessa dabra.",
+          "am": "የቡልቡላ ወንዝ ከተማዋን ያቋርጣል።",
+          "en": "The Bulbula River crosses through the city."
+        }
+      },
+      {
+        "text": {
+          "om": "Qonni fi Industiriin magaalattii keessatti bakka guddaa qabu.",
+          "am": "ግብርናና ኢንዱስትሪ በከተማዋ ውስጥ ትልቅ ቦታ ይይዛሉ።",
+          "en": "Agriculture and industry hold a significant place in the city."
+        }
+      },
+      {
+        "text": {
+          "om": "Daandiin konkolaataa saffisaa (expressway) Finfinnee fi Hawaasaa walitti hidhu cinaatti argamti.",
+          "am": "ፈጣኑ የመንገድ (expressway) ፊንፊኔንና ሀዋሳን የሚያገናኘው መንገድ አጠገብ ትገኛለች።",
+          "en": "It lies alongside the expressway that connects Finfinnee (Addis Ababa) and Hawassa."
+        }
+      }
+    ]
+  },
+  "investment": {
+    "park_name": {
+      "om": "Paarkii Indastirii Qonnaa Qindaa'aa Bulbulaa",
+      "am": "ቡልቡላ የተቀናጀ የግብርና ኢንዱስትሪ ፓርክ",
+      "en": "Bulbula Integrated Agro-Industrial Park"
+    },
+    "hectares": "271",
+    "investors": "135",
+    "note": {
+      "om": "Odeeffannoon kun madda dhiyaate irratti hundaa'e, hin mirkanoofne.",
+      "am": "ይህ መረጃ በቀረበ ምንጭ ላይ የተመሰረተ ሲሆን ገና አልተረጋገጠም።",
+      "en": "These figures come from an early source and are not yet confirmed."
+    }
+  },
+  "about": {
+    "gallery": []
+  },
+  "investment_sectors": [
+    {
+      "kind": "agriculture",
+      "title": {
+        "om": "Qonnaa",
+        "am": "ግብርና",
+        "en": "Agriculture"
+      },
+      "description": {
+        "om": "Bulbulaan lafa qonnaa badhaadhaa fi haala qilleensaa mijaa'aa qabdi.",
+        "am": "ቡልቡላ ለም የእርሻ መሬትና ምቹ የአየር ንብረት አላት።",
+        "en": "Bulbulaa has fertile farmland and a favorable climate."
+      },
+      "items": {
+        "om": [
+          "Boqqolloo",
+          "Qamadii",
+          "Timaatimii",
+          "Muuzii",
+          "Baaqelaa",
+          "Ataraa",
+          "Kuduraa",
+          "Fuduraa"
+        ],
+        "am": [
+          "በቆሎ",
+          "ስንዴ",
+          "ቲማቲም",
+          "ሙዝ",
+          "ባቄላ",
+          "አተር",
+          "አትክልት",
+          "ፍራፍሬ"
+        ],
+        "en": [
+          "Maize",
+          "Wheat",
+          "Tomato",
+          "Banana",
+          "Beans",
+          "Peas",
+          "Vegetables",
+          "Fruits"
+        ]
+      }
+    },
+    {
+      "kind": "livestock",
+      "title": {
+        "om": "Beeyladaa",
+        "am": "እንስሳት እርባታ",
+        "en": "Livestock"
+      },
+      "description": {
+        "om": "Horsiisa beeyladaa fi omisha isaanii irratti hundaa'e carraa invastimantii.",
+        "am": "በእንስሳት እርባታና ውጤቶቻቸው ላይ የተመሰረቱ የኢንቨስትመንት እድሎች።",
+        "en": "Investment opportunities based on livestock rearing and its products."
+      },
+      "items": {
+        "om": [
+          "Aannanii",
+          "Foon",
+          "Damma",
+          "Horsiisa Beeyladaa",
+          "Agro-processing"
+        ],
+        "am": [
+          "ወተት",
+          "ስጋ",
+          "ማር",
+          "የእንስሳት እርባታ",
+          "አግሮ-ማቀነባበሪያ"
+        ],
+        "en": [
+          "Dairy",
+          "Meat",
+          "Honey",
+          "Livestock Rearing",
+          "Agro-processing"
+        ]
+      }
+    },
+    {
+      "kind": "industry",
+      "title": {
+        "om": "Industirii",
+        "am": "ኢንዱስትሪ",
+        "en": "Industry"
+      },
+      "description": {
+        "om": "Bulbula Integrated Agro-Industrial Park — hektaara 271 ta'u irratti, investoroota naannoo 135f kan qophaa'e.",
+        "am": "የቡልቡላ የተቀናጀ አግሮ-ኢንዱስትሪ ፓርክ — በግምት 271 ሄክታር ላይ ያረፈ፣ ለ135 ያህል ባለሀብቶች የተዘጋጀ።",
+        "en": "Bulbula Integrated Agro-Industrial Park — spanning approximately 271 hectares, designed for around 135 investors."
+      },
+      "items": {
+        "om": [
+          "Bulbula Integrated Agro-Industrial Park"
+        ],
+        "am": [
+          "የቡልቡላ የተቀናጀ አግሮ-ኢንዱስትሪ ፓርክ"
+        ],
+        "en": [
+          "Bulbula Integrated Agro-Industrial Park"
+        ]
+      }
+    },
+    {
+      "kind": "tourism",
+      "title": {
+        "om": "Turizimii",
+        "am": "ቱሪዝም",
+        "en": "Tourism"
+      },
+      "description": {
+        "om": "Haroolee fi bareedina uumamaa Sululaa Guddaa irratti hundaa'e carraa turizimii.",
+        "am": "በሀይቆችና በታላቁ የስምጥ ሸለቆ ተፈጥሯዊ ውበት ላይ የተመሰረቱ የቱሪዝም እድሎች።",
+        "en": "Tourism opportunities based on the lakes and the natural beauty of the Great Rift Valley."
+      },
+      "items": {
+        "om": [
+          "Hoteelota",
+          "Resortota",
+          "Restraantota",
+          "Bashannana",
+          "Eco-tourism",
+          "Turizimii Haroo"
+        ],
+        "am": [
+          "ሆቴሎች",
+          "ሪዞርቶች",
+          "ምግብ ቤቶች",
+          "መዝናኛ",
+          "ኢኮ-ቱሪዝም",
+          "የሀይቅ ቱሪዝም"
+        ],
+        "en": [
+          "Hotels",
+          "Resorts",
+          "Restaurants",
+          "Recreation",
+          "Eco-tourism",
+          "Lake Tourism"
+        ]
+      }
+    }
+  ],
+  "about_sections": [
+    {
+      "title": {
+        "om": "Bulbulaa Maali?",
+        "am": "ቡልቡላ ምንድን ናት?",
+        "en": "What is Bulbulaa?"
+      },
+      "body": {
+        "om": "Bulbulaan magaalaa Godina Shawaa Bahaa, Aanaa Adaamii Tulluu Jiddoo Kombolchaa keessatti argamtu, Sululaa Guddaa (Great Rift Valley) keessatti kan argamtu dha. Magaalattiin Finfinnee irraa naannoo Km 180 karaa kibba-bahaatti argamti.",
+        "am": "ቡልቡላ በምስራቅ ሸዋ ዞን፣ አዳሚ ቱሉ ጅዶ ቆምቦልቻ ወረዳ ውስጥ፣ በታላቁ የስምጥ ሸለቆ ውስጥ የምትገኝ ከተማ ናት። ከተማዋ ከፊንፊኔ በደቡብ ምስራቅ አቅጣጫ በግምት 180 ኪ.ሜ ርቀት ላይ ትገኛለች።",
+        "en": "Bulbulaa is a city located in East Shewa Zone, in the Adami Tullu Jido Kombolcha area, within the Great Rift Valley. It lies approximately 180 km southeast of Finfinnee (Addis Ababa)."
+      }
+    },
+    {
+      "title": {
+        "om": "Seenaa fi Eenyummaa",
+        "am": "ታሪክና ማንነት",
+        "en": "History & Identity"
+      },
+      "body": {
+        "om": "Bulbulaan aadaa fi eenyummaa Oromoo waliin walqabatee, hawaasa jiraattota naannoo sanaa keessatti bakka guddaa qaba. Magaalattiin bu'uura aadaa fi hawaasummaa cimaa qabaachuun beekamti.",
+        "am": "ቡልቡላ ከኦሮሞ ባህልና ማንነት ጋር በጥብቅ የተቆራኘች፣ በአካባቢው ላሉ ነዋሪዎች ትልቅ ቦታ ያላት ከተማ ናት። ጠንካራ ባህላዊና ማህበራዊ መሠረት እንዳላት ትታወቃለች።",
+        "en": "Bulbulaa is closely tied to Oromo culture and identity, and holds an important place for the communities of the surrounding area. The city is known for its strong cultural and social foundation."
+      }
+    },
+    {
+      "title": {
+        "om": "Teessuma",
+        "am": "አቀማመጥ",
+        "en": "Location"
+      },
+      "body": {
+        "om": "Bulbulaan Sululaa Guddaa keessatti argamuun harroolee gurguddoo — Langaanoo, Abijataa fi Shaallaa — waliin walqabatti. Lagni Bulbulaa magaalattii keessa dabra. Daandiin konkolaataa saffisaa (expressway) Finfinnee fi Hawaasaa walitti hidhu cinaan ishee darba.",
+        "am": "ቡልቡላ በታላቁ የስምጥ ሸለቆ ውስጥ በመገኘቷ ከትላልቅ ሀይቆች — ላንጋኖ፣ አቢጃታና ሻላ — ጋር ትዋሰናለች። የቡልቡላ ወንዝ ከተማዋን ያቋርጣል። ፊንፊኔንና ሀዋሳን የሚያገናኘው ፈጣን መንገድ (expressway) በአቅራቢያዋ ያልፋል።",
+        "en": "Located within the Great Rift Valley, Bulbulaa is closely connected to the major lakes of Langano, Abijata and Shalla. The Bulbula River crosses through the city, and the expressway connecting Finfinnee (Addis Ababa) and Hawassa runs alongside it."
+      }
+    },
+    {
+      "title": {
+        "om": "Qabeenya Uumamaa",
+        "am": "የተፈጥሮ ሀብት",
+        "en": "Natural Resources"
+      },
+      "body": {
+        "om": "Bareedina uumamaa Sululaa Guddaa, harroolee fi lagaa Bulbulaa magaalattiif qabeenya uumamaa guddaa dha, kanaanis turizimii fi qonnaaf mijaa'aa taasisa.",
+        "am": "የታላቁ የስምጥ ሸለቆ ተፈጥሯዊ ውበት፣ ሀይቆችና የቡልቡላ ወንዝ ለከተማዋ ትልቅ የተፈጥሮ ሀብት ናቸው፤ ለቱሪዝምና ለግብርናም ምቹ ያደርጓታል።",
+        "en": "The natural beauty of the Great Rift Valley, its lakes, and the Bulbula River are major natural assets for the city, making it well-suited for tourism and agriculture."
+      }
+    },
+    {
+      "title": {
+        "om": "Qonna",
+        "am": "ግብርና",
+        "en": "Agriculture"
+      },
+      "body": {
+        "om": "Qonni magaalaa Bulbulaa fi naannoo isheetiif madda oomishaa guddaa dha, oomisha akka boqqolloo, qamadii, muuziitii fi kuduraa-fuduraa dabalatee.",
+        "am": "ግብርና ለቡልቡላ ከተማና ለአካባቢዋ ትልቅ የምርት ምንጭ ነው፤ በቆሎ፣ ስንዴ፣ ሙዝና አትክልት ፍራፍሬን ጨምሮ።",
+        "en": "Agriculture is a major source of production for Bulbulaa and its surrounding area, including maize, wheat, banana, and vegetables and fruits."
+      }
+    },
+    {
+      "title": {
+        "om": "Beeyladaa",
+        "am": "እንስሳት እርባታ",
+        "en": "Livestock"
+      },
+      "body": {
+        "om": "Bulbulaa dabalatee naannoon Oromiyaa baay'ina beeyladaatiin sadarkaa olaanaa qaba — saawwan, hoolaa, re'oota, fardeen, gaangolee, harreewwan fi lukkoolee. Oomishni aannanii, foonii fi dammaa bal'inaan argama, kunis Paarkii Indastirii Bulbulaatiif madda wantoota rawwaatii (raw materials) ti.",
+        "am": "ቡልቡላን ጨምሮ የኦሮሚያ ክልል በእንስሳት ብዛት ከፍተኛ ደረጃ ላይ ይገኛል — ላሞች፣ በጎች፣ ፍየሎች፣ ፈረሶች፣ በቅሎዎችና አህዮች እንዲሁም ዶሮዎች። የወተት፣ የስጋና የማር ምርት በስፋት ይገኛል፤ ይህም ለቡልቡላ ኢንዱስትሪ ፓርክ ጥሬ እቃ ምንጭ ሆኖ ያገለግላል።",
+        "en": "Bulbulaa, like much of Oromia, has a high concentration of livestock — cattle, sheep, goats, horses, mules, donkeys and poultry. Milk, meat and honey production is widespread, serving as a source of raw materials for the Bulbula Industrial Park."
+      }
+    },
+    {
+      "title": {
+        "om": "Industirii",
+        "am": "ኢንዱስትሪ",
+        "en": "Industry"
+      },
+      "body": {
+        "om": "Bulbula Integrated Agro-Industrial Park (IAIP) guddina industirii magaalattii deeggaruuf hundeeffame, kanaanis carraa invastimantii industirii bal'aa uuma.",
+        "am": "የቡልቡላ የተቀናጀ አግሮ-ኢንዱስትሪ ፓርክ (IAIP) የከተማዋን የኢንዱስትሪ እድገት ለመደገፍ የተቋቋመ ሲሆን ሰፊ የኢንዱስትሪ ኢንቨስትመንት እድል ይፈጥራል።",
+        "en": "The Bulbula Integrated Agro-Industrial Park (IAIP) was established to support the city's industrial growth, creating broad industrial investment opportunities."
+      }
+    },
+    {
+      "title": {
+        "om": "Hawaasa",
+        "am": "ማህበረሰብ",
+        "en": "Community"
+      },
+      "body": {
+        "om": "Hawaasni Bulbulaa waldeggarsa fi tokkummaa irratti hundaa'ee misooma magaalattii keessatti gahee ol'aanaa qaba. Saboonnii fi amantaaleen garaagaraa naannichatti nagaan waliin jiraatu. Bulbulaan akkasumas burqaa hayyootaa ti — dhaloota beekumsaan gahoomee hedduu maddisiisaa jirti.",
+        "am": "የቡልቡላ ማህበረሰብ በመተባበርና በአንድነት ላይ የተመሰረተ ሲሆን በከተማዋ ልማት ውስጥ ከፍተኛ ሚና ይጫወታል። የተለያዩ ብሔረሰቦችና እምነቶች በአካባቢው በሰላም አብረው ይኖራሉ። ቡልቡላ በተጨማሪም እውቀት ያካበቱ ብዙ ምሁራንን ያፈራች ከተማ ናት።",
+        "en": "The Bulbulaa community, built on cooperation and unity, plays a significant role in the city's development. People of different ethnicities and faiths live together peacefully in the area. Bulbulaa is also known as a wellspring of educated professionals, having produced many well-trained individuals."
+      }
+    },
+    {
+      "title": {
+        "om": "Mul'ata Magaalaa",
+        "am": "የከተማ ራዕይ",
+        "en": "City Vision"
+      },
+      "body": {
+        "om": "Mul'anni magaalaa Bulbulaa, magaalaa ammayyaa, dijitaalaa fi jiddu gala invastimantii, industirii fi turizimii taatee mul'achuu dha — Bulbulaa har'aa irraa gara Bulbulaa boruutti.",
+        "am": "የቡልቡላ ከተማ ራዕይ ዘመናዊ፣ ዲጂታልና የኢንቨስትመንት፣ የኢንዱስትሪና የቱሪዝም ማዕከል ሆና መታየት ነው — ከዛሬዋ ቡልቡላ ወደ ነገዋ ቡልቡላ።",
+        "en": "Bulbulaa's vision is to stand as a modern, digital city and a center of investment, industry and tourism — from the Bulbulaa of today to the Bulbulaa of tomorrow."
+      }
+    }
+  ]
+}
