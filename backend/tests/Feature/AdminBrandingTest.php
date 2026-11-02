@@ -103,6 +103,7 @@ class AdminBrandingTest extends TestCase
         $this->getJson('/api/public/tourism-places')->assertOk()->assertJsonCount(2, 'data');
         $this->getJson('/api/public/alerts')->assertOk()->assertJsonCount(1, 'data');
         $this->getJson('/api/public/documents')->assertOk()->assertJsonCount(2, 'data');
+        $this->getJson('/api/public/offices')->assertOk()->assertJsonCount(3, 'data')->assertJsonPath('data.2.name.en', 'Water and Sewerage Office');
         Storage::disk('public')->assertExists('documents/demo-business-licence-form.pdf');
         $this->assertStringStartsWith('%PDF-1.4', Storage::disk('public')->get('documents/demo-business-licence-form.pdf'));
     }
